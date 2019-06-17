@@ -6,7 +6,7 @@
   if($_SERVER['REQUEST_METHOD']=='POST'){
     $tgl_mulai    = $_POST['tgl_mulai'];
     $tgl_selesai  = $_POST['tgl_selesai'];
-    $query_tgl    = " AND date(t.tanggal) BETWEEN '$tgl_mulai' AND '$tgl_selesai'";
+    $query_tgl    = " AND date(t.created_at) BETWEEN '$tgl_mulai' AND '$tgl_selesai'";
   }else{
     $query_tgl    = "";
   }

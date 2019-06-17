@@ -30,9 +30,6 @@
       $id_bahan = mysqli_insert_id($conn);
 
       $id_user  = $_SESSION['id_user'];
-      $type     = 'bahan';
-      $keterangan='Pembelian bahan';
-
       /*$transaksi_tambah_bahan_query =
         "INSERT INTO tb_transaksi (tanggal_key, tanggal, id_user, type, id_produk, jumlah, debit, credit, keterangan, nama, alamat)
           VALUES ('$time', '$tanggal', '$id_user', '$type', '$id_bahan', '$jumlah', '$harga', 0, '$keterangan', '$nama_supplier', '$alamat_supplier')";

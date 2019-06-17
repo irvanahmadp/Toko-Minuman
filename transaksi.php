@@ -19,13 +19,10 @@
 
     $tanggal  = date("Y-m-d H:i:s");
     $id_user  = $_SESSION['id_user'];
-    $type     = 'produk';
     $id_produk= $id_produk;
     $jumlah   = $_POST['jumlah'];
     $harga_jual= (int) filter_var($_POST['harga_jual'], FILTER_SANITIZE_NUMBER_INT);;
     $harga    = $harga_jual;
-    $credit   = $harga * $jumlah;
-    $keterangan= "Penjualan Produk";
     if(strtoupper($_SESSION['level'])=='A'){
       $nama   = mysqli_real_escape_string($conn, $_POST['nama']);
     }else{
@@ -34,14 +31,15 @@
     $alamat   = mysqli_real_escape_string($conn, $_POST['alamat_pembeli']);
 
     $transaksi_penjualan_query =
-      "INSERT INTO tb_transaksi (tanggal, id_user, type, id_produk, jumlah, debit, credit, keterangan, nama, alamat)
-        VALUES ('$tanggal', '$id_user', '$type', '$id_produk', '$jumlah', 0, '$credit', '$keterangan', '$nama', '$alamat')";
+      "INSERT INTO tb_transaksi_jual (created_at, id_produk, jumlah, harga, id_user, alamat)
+        VALUES ('$tanggal', '$id_produk', '$jumlah', '$harga','$id_user', '$alamat')";
     $transaksi_tambah_penjualan_query = mysqli_query($conn, $transaksi_penjualan_query) or 
       die(mysqli_error($conn));
 
     $update_stok_query =
       "UPDATE tb_produk
-        SET stok = stok - $jumlah
+        SET stok = stok - $jumlah,
+          updated_at = '$tanggal'
       WHERE id_produk = '$id_produk'
       LIMIT 1";
     $update_stok_result = mysqli_query($conn, $update_stok_query) or 
