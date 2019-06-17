@@ -20,7 +20,7 @@
 
       $tambah_stok_query = 
         "UPDATE tb_produk
-          SET tanggal = '$tanggal',
+          SET updated_at = '$tanggal',
             stok      = stok + $stok
           WHERE id_produk = '$id_produk'
           LIMIT 1;    

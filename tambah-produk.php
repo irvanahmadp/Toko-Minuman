@@ -44,8 +44,8 @@
       }
 
       $tambah_produk_query = 
-        "INSERT INTO tb_produk (tanggal_key, tanggal, nama, harga, stok, img)
-          VALUES ('$time', '$tanggal', '$nama', '$harga', '$stok', '$alamat_img')";
+        "INSERT INTO tb_produk (created_at, updated_at, nama, harga, stok, img)
+          VALUES ('$tanggal', '$tanggal', '$nama', '$harga', '$stok', '$alamat_img')";
       $tambah_produk_result = mysqli_query($conn, $tambah_produk_query) or die(mysqli_error($conn));
       $id_produk = mysqli_insert_id($conn);
 

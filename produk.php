@@ -69,7 +69,7 @@
                           while($produk = mysqli_fetch_array($list_produk_result, MYSQLI_ASSOC)){ ?>
                             <tr>
                             <td><?= $no ?></td>
-                            <td><?= $produk['tanggal']; ?> </td>
+                            <td><?= $produk['created_at']; ?> </td>
                             <td><?= $produk['nama']; ?> </td>
                             <td>Rp. <?= number_format($produk['harga'], 0,"","."); ?> </td>
                             <td><?= $produk['stok'] == 0 ? 'Habis' : $produk['stok']; ?> </td>

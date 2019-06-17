@@ -11,12 +11,16 @@
       $tanggal    = date('Y-m-d H:i:s');
       $nama       = mysqli_real_escape_string($conn, $_POST['nama']);
       $alamat     = mysqli_real_escape_string($conn, $_POST['alamat']);
+      $telp     = mysqli_real_escape_string($conn, $_POST['telp']);
 
       $tambah_supplier_query = 
-        "INSERT INTO tb_supplier (tanggal_key, tanggal, nama, alamat)
-          VALUES ('$time','$tanggal', '$nama', '$alamat')";
+        "INSERT INTO tb_supplier (created_at, nama, alamat, telp)
+          VALUES ('$tanggal', '$nama', '$alamat', '$telp')";
       $tambah_supplier_result = mysqli_query($conn, $tambah_supplier_query) or die(mysqli_error($conn));
       $id_supplier = mysqli_insert_id($conn);
+
+      $add_supplier_msg = "Supplier berhasil ditambahkan";
+      header( "Refresh:3; url=".$base_url."supplier.php", true, 303);
     }
   }
 ?>
@@ -31,6 +35,17 @@
     <?php include 'layout/header.php'; ?>
   </header>
   <div class="app-body">
+    <div class="message-alert body">
+      <?php if(isset($add_supplier_msg) && $add_supplier_msg != ''){ ?>
+        <div class="alert alert-success">
+          <center>
+            <strong>
+              <?= $add_supplier_msg; ?>
+            </strong>
+          </center>
+        </div>
+      <?php } ?>
+    </div>
     <div class="sidebar">
       <?php include 'layout/sidebar.php'; ?>
     </div>
@@ -77,6 +92,14 @@
                     <div class="controls">
                       <div class="input-prepend input-group">
                         <textarea name="alamat" class="form-control" required=""></textarea>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-form-label" for="prependedInput">Nomer Telpon</label>
+                    <div class="controls">
+                      <div class="input-prepend input-group">
+                        <input name="telp" class="form-control" required="">
                       </div>
                     </div>
                   </div>

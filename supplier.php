@@ -56,6 +56,7 @@
                           <th>No</th>
                           <th>Nama Supplier</th>
                           <th>Alamat Supplier</th>
+                          <th>No. Telepon</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -66,6 +67,7 @@
                             <td><?= $no ?></td>
                             <td><?= $bahan['nama']; ?> </td>
                             <td><?= $bahan['alamat']; ?></td>
+                            <td><?= $bahan['telp']; ?></td>
                             </tr>
                             
                         <?php 

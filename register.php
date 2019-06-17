@@ -23,10 +23,12 @@
 
     $password = md5($_POST['password']);
 
+    $alamat = mysqli_real_escape_string($conn, $_POST['alamat']);
+
     if(!isset($namaErr) && !isset($emailErr)){
       $register_query = 
-        "INSERT INTO tb_user (tanggal_key, tanggal, nama, level, email, telp, password)
-          VALUES ('$time', '$tanggal', '$nama', 'M', '$email', '$telp', '$password')";
+        "INSERT INTO tb_user (created_at, nama, level, email, telp, password, alamat)
+          VALUES ('$tanggal', '$nama', 'M', '$email', '$telp', '$password', '$alamat')";
       $register_result = mysqli_query($conn, $register_query);
       $id_user = mysqli_insert_id($conn);
       $_SESSION['id_user']= $id_user;
@@ -112,6 +114,9 @@
                     </span>
                   </div>
                   <input class="form-control" type="password" placeholder="Password" name="password" minlength="7" maxlength="15">
+                </div>
+                <div class="input-group mb-3">
+                  <textarea placeholder="Alamat" class="form-control" name="alamat"></textarea>
                 </div>
                 <button class="btn btn-block btn-success">Create Account</button>
               </form>

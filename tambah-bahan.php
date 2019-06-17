@@ -24,8 +24,8 @@
       $satuan     = mysqli_real_escape_string($conn, $_POST['satuan']);
 
       $tambah_bahan_query = 
-        "INSERT INTO tb_bahan (tanggal_key, tanggal, nama, nama_supplier, alamat_supplier, jumlah, satuan, harga)
-          VALUES ('$time', '$tanggal', '$nama', '$nama_supplier', '$alamat_supplier', '$jumlah', '$satuan', '$harga')";
+        "INSERT INTO tb_bahan (created_at,  nama, id_supplier, jumlah, satuan, harga)
+          VALUES ('$tanggal', '$nama', '$id_supplier', '$jumlah', '$satuan', '$harga')";
       $tambah_bahan_result = mysqli_query($conn, $tambah_bahan_query) or die(mysqli_error($conn));
       $id_bahan = mysqli_insert_id($conn);
 
@@ -33,9 +33,15 @@
       $type     = 'bahan';
       $keterangan='Pembelian bahan';
 
-      $transaksi_tambah_bahan_query =
+      /*$transaksi_tambah_bahan_query =
         "INSERT INTO tb_transaksi (tanggal_key, tanggal, id_user, type, id_produk, jumlah, debit, credit, keterangan, nama, alamat)
           VALUES ('$time', '$tanggal', '$id_user', '$type', '$id_bahan', '$jumlah', '$harga', 0, '$keterangan', '$nama_supplier', '$alamat_supplier')";
+      $transaksi_tambah_bahan_result = mysqli_query($conn, $transaksi_tambah_bahan_query) or 
+        die(mysqli_error($conn));*/
+
+      $transaksi_tambah_bahan_query =
+        "INSERT INTO tb_transaksi_beli (created_at, nama_bahan, jumlah, satuan, harga, id_supplier)
+          VALUES ('$tanggal', '$nama', '$jumlah', '$satuan', '$harga', '$id_supplier')";
       $transaksi_tambah_bahan_result = mysqli_query($conn, $transaksi_tambah_bahan_query) or 
         die(mysqli_error($conn));
 

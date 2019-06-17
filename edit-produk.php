@@ -22,7 +22,7 @@
 
       $edit_produk_query = 
         "UPDATE tb_produk
-          SET tanggal = '$tanggal',
+          SET updated_at = '$tanggal',
             nama      = '$nama',
             harga     = '$harga_jual'
           WHERE id_produk = '$id_produk'

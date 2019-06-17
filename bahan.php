@@ -8,7 +8,10 @@
     header("Location:".$base_url.'index.php');
   }
 
-  $list_bahan_query = "SELECT * FROM tb_bahan";
+  $list_bahan_query = 
+    "SELECT bahan.*, supplier.nama AS nama_supplier, supplier.alamat AS alamat_supplier FROM tb_bahan bahan
+    INNER JOIN tb_supplier supplier
+      ON bahan.id_supplier = supplier.id_supplier";
   $list_bahan_result= mysqli_query($conn, $list_bahan_query);
 ?>
 <!DOCTYPE html>
