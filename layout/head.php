@@ -10,3 +10,6 @@
   <link rel="stylesheet" href="<?= $base_url; ?>assets/css/custom.css">
   <!-- Datepicker -->
   <link rel="stylesheet" href="<?= $base_url; ?>assets/node_modules/@chenfengyuan/datepicker/dist/datepicker.min.css">
+  <!-- Select2 -->
+  <link rel="stylesheet" href="<?= $base_url; ?>assets/css/select2.min.css">
+  <link rel="stylesheet" href="<?= $base_url; ?>assets/css/select2-bootstrap.min.css">

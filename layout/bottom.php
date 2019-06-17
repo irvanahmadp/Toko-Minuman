@@ -11,5 +11,7 @@
   <script src="<?= $base_url; ?>assets/js/dataTables.bootstrap4.min.js"></script>
   <!-- Datepicker -->
   <script src="<?= $base_url; ?>assets/node_modules/@chenfengyuan/datepicker/dist/datepicker.min.js"></script>
+  <!-- Select2 -->
+  <script src="<?= $base_url; ?>assets/js/select2.min.js"></script>
   <!-- Custom -->
   <script src="<?= $base_url; ?>assets/js/custom.js"></script>

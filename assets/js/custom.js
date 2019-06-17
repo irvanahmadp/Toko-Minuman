@@ -12,6 +12,11 @@ $(document).ready(function(){
       format: 'yyyy-mm-dd'
     });
   }
+  if($(".select2").length > 0){
+    $(".select2").select2({
+      theme: "bootstrap"
+    });
+  }
   $(".js-jumlah-produk").keyup(function(e){
     var harga_temp   = HapusTitik($("input[name=harga_jual]").val());
     var harga        = parseInt(harga_temp);

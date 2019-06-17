@@ -48,6 +48,9 @@
           VALUES ('$time', '$tanggal', '$nama', '$harga', '$stok', '$alamat_img')";
       $tambah_produk_result = mysqli_query($conn, $tambah_produk_query) or die(mysqli_error($conn));
       $id_produk = mysqli_insert_id($conn);
+
+      $add_produk_msg = "Produk berhasil ditambahkan";
+      header( "Refresh:3; url=".$base_url."produk.php", true, 303);
     }
   }
 ?>
@@ -62,6 +65,17 @@
     <?php include 'layout/header.php'; ?>
   </header>
   <div class="app-body">
+    <div class="message-alert body">
+      <?php if(isset($add_produk_msg) && $add_produk_msg != ''){ ?>
+        <div class="alert alert-success">
+          <center>
+            <strong>
+              <?= $add_produk_msg; ?>
+            </strong>
+          </center>
+        </div>
+      <?php } ?>
+    </div>
     <div class="sidebar">
       <?php include 'layout/sidebar.php'; ?>
     </div>

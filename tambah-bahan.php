@@ -11,8 +11,15 @@
       $time       = time();
       $tanggal    = date('Y-m-d H:i:s');
       $nama       = mysqli_real_escape_string($conn, $_POST['nama']);
-      $nama_supplier  = mysqli_real_escape_string($conn, $_POST['nama_supplier']);
-      $alamat_supplier= mysqli_real_escape_string($conn, $_POST['alamat_supplier']);
+
+      $id_supplier          = mysqli_real_escape_string($conn, $_POST['id_supplier']);
+      $data_supplier_query  = "SELECT * FROM tb_supplier WHERE id_supplier = '$id_supplier' LIMIT 1";
+      $data_supplier_result = mysqli_query($conn, $data_supplier_query);
+      $data_supplier        = mysqli_fetch_array($data_supplier_result, MYSQLI_ASSOC);
+
+      $nama_supplier  = $data_supplier['nama'];
+      $alamat_supplier= $data_supplier['alamat'];
+
       $jumlah     = (int) filter_var($_POST['jumlah'], FILTER_SANITIZE_NUMBER_INT);
       $satuan     = mysqli_real_escape_string($conn, $_POST['satuan']);
 
@@ -31,7 +38,14 @@
           VALUES ('$time', '$tanggal', '$id_user', '$type', '$id_bahan', '$jumlah', '$harga', 0, '$keterangan', '$nama_supplier', '$alamat_supplier')";
       $transaksi_tambah_bahan_result = mysqli_query($conn, $transaksi_tambah_bahan_query) or 
         die(mysqli_error($conn));
+
+      $add_bahan_msg = "Bahan berhasil ditambahkan";
+      header( "Refresh:3; url=".$base_url."bahan.php", true, 303);
     }
+
+    /* List Semua Supplier */
+    $list_supplier_query = "SELECT * FROM tb_supplier";
+    $list_supplier_result= mysqli_query($conn, $list_supplier_query);
   }
 ?>
 <!DOCTYPE html>
@@ -45,6 +59,17 @@
     <?php include 'layout/header.php'; ?>
   </header>
   <div class="app-body">
+    <div class="message-alert body">
+      <?php if(isset($add_bahan_msg) && $add_bahan_msg != ''){ ?>
+        <div class="alert alert-success">
+          <center>
+            <strong>
+              <?= $add_bahan_msg; ?>
+            </strong>
+          </center>
+        </div>
+      <?php } ?>
+    </div>
     <div class="sidebar">
       <?php include 'layout/sidebar.php'; ?>
     </div>
@@ -126,6 +151,25 @@
                         <div class="input-group-prepend">
                           <span class="input-group-text">@</span>
                         </div>
+                        <select name="id_supplier" required="" class="form-control select2">
+                          <option disabled selected>Supplier</option>
+                          <?php
+                            while($supplier = mysqli_fetch_array($list_supplier_result, MYSQLI_ASSOC)){
+                              echo "<option value = \"$supplier[id_supplier]\">$supplier[nama]</option>";
+                            }
+                          ?>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <!--  Data Supplier Diambil Dari DB
+                  <div class="form-group">
+                    <label class="col-form-label" for="prependedInput">Nama Supplier</label>
+                    <div class="controls">
+                      <div class="input-prepend input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">@</span>
+                        </div>
                         <input class="form-control" id="prependedInput" size="16" type="text" name="nama_supplier" required="">
                       </div>
                     </div>
@@ -138,6 +182,7 @@
                       </div>
                     </div>
                   </div>
+                  -->
                   <div class="form-actions">
                     <button class="btn btn-primary" type="submit">Save changes</button>
                     <button class="btn btn-secondary" type="cancel">Cancel</button>
