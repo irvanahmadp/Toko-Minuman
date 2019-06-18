@@ -6,29 +6,47 @@
   if($_SERVER['REQUEST_METHOD']=='POST'){
     $tgl_mulai    = $_POST['tgl_mulai'];
     $tgl_selesai  = $_POST['tgl_selesai'];
-    $query_tgl    = " AND date(t.created_at) BETWEEN '$tgl_mulai' AND '$tgl_selesai'";
+    if(strtoupper($_SESSION['level']) == 'A'){
+      /* Jika user admin maka where hanya tanggal */
+      $query_tgl    = " WHERE date(t.created_at) BETWEEN '$tgl_mulai' AND '$tgl_selesai'";
+    }else{
+      /* Jika user selain admin maka where id_user dan tanggal */
+      $query_tgl    = " AND date(t.created_at) BETWEEN '$tgl_mulai' AND '$tgl_selesai'";
+    }
   }else{
     $query_tgl    = "";
   }
 
   if(strtoupper($_SESSION['level']) == 'A'){  
     /* Jika Yang Login Admin */
+    // $list_transaksi_query = 
+    //   "SELECT t.tanggal, t.credit, t.jumlah, t.nama as nama_pembeli, t.alamat as alamat_pembeli, p.nama as minuman
+    //   FROM tb_transaksi t
+    //     INNER JOIN tb_produk p
+    //       ON t.id_produk = p.id_produk
+    //   WHERE type = 'produk'".$query_tgl;
     $list_transaksi_query = 
-      "SELECT t.tanggal, t.credit, t.jumlah, t.nama as nama_pembeli, t.alamat as alamat_pembeli, p.nama as minuman
-      FROM tb_transaksi t
+      "SELECT t.created_at, t.harga, t.jumlah, t.nama as nama_pembeli, t.alamat as alamat_pembeli, p.nama as minuman
+      FROM tb_transaksi_jual t
         INNER JOIN tb_produk p
           ON t.id_produk = p.id_produk
-      WHERE type = 'produk'".$query_tgl;
+      ".$query_tgl;
     $list_transaksi_result= mysqli_query($conn, $list_transaksi_query);
   }else{
     /* Jika Yang Login Bukan Admin */
+    // $list_transaksi_query = 
+    //   "SELECT t.tanggal, t.credit, t.jumlah, t.nama as nama_pembeli, t.alamat as alamat_pembeli, p.nama as minuman
+    //   FROM tb_transaksi t
+    //     INNER JOIN tb_produk p
+    //       ON t.id_produk = p.id_produk
+    //   WHERE type = 'produk'
+    //     AND id_user = '$_SESSION[id_user]'".$query_tgl;
     $list_transaksi_query = 
-      "SELECT t.tanggal, t.credit, t.jumlah, t.nama as nama_pembeli, t.alamat as alamat_pembeli, p.nama as minuman
-      FROM tb_transaksi t
+      "SELECT t.created_at, t.harga, t.jumlah, t.nama as nama_pembeli, t.alamat as alamat_pembeli, p.nama as minuman
+      FROM tb_transaksi_jual t
         INNER JOIN tb_produk p
           ON t.id_produk = p.id_produk
-      WHERE type = 'produk'
-        AND id_user = '$_SESSION[id_user]'".$query_tgl;
+      WHERE id_user = '$_SESSION[id_user]'".$query_tgl;
     $list_transaksi_result= mysqli_query($conn, $list_transaksi_query);
   }
 
@@ -98,13 +116,13 @@
                           while($transaksi = mysqli_fetch_array($list_transaksi_result, MYSQLI_ASSOC)){ ?>
                             <tr>
                             <td><?= $no; ?></td>
-                            <td><?= $transaksi['tanggal']; ?></td>
+                            <td><?= $transaksi['created_at']; ?></td>
                             <td><?= $transaksi['minuman']; ?></td>
                             <td>
-                            Rp. <?= number_format($transaksi['credit'] / $transaksi['jumlah'], 0, '', '.'); ?>
+                            Rp. <?= number_format($transaksi['harga'], 0, '', '.'); ?>
                             </td>
                             <td><?= $transaksi['jumlah']; ?></td>
-                            <td>Rp. <?= number_format($transaksi['credit'], 0, '', '.'); ?></td>
+                            <td>Rp. <?= number_format($transaksi['harga'] * $transaksi['jumlah'], 0, '', '.'); ?></td>
                             <?php if(strtoupper($_SESSION['level']) == 'A') { ?>
                               <td><?= $transaksi['nama_pembeli']; ?></td>
                             <?php } ?>

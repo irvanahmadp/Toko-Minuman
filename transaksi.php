@@ -31,8 +31,8 @@
     $alamat   = mysqli_real_escape_string($conn, $_POST['alamat_pembeli']);
 
     $transaksi_penjualan_query =
-      "INSERT INTO tb_transaksi_jual (created_at, id_produk, jumlah, harga, id_user, alamat)
-        VALUES ('$tanggal', '$id_produk', '$jumlah', '$harga','$id_user', '$alamat')";
+      "INSERT INTO tb_transaksi_jual (created_at, id_produk, jumlah, harga, id_user, nama, alamat)
+        VALUES ('$tanggal', '$id_produk', '$jumlah', '$harga','$id_user', '$nama', '$alamat')";
     $transaksi_tambah_penjualan_query = mysqli_query($conn, $transaksi_penjualan_query) or 
       die(mysqli_error($conn));
 

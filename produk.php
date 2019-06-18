@@ -83,9 +83,11 @@
                             </td>
                             <td>
                               <?php if(strtoupper($_SESSION['level']) == 'A') { ?>
-                                <a class="btn btn-primary btn-block"
-                                  href="<?= $base_url; ?>transaksi.php?id_produk=<?= $produk['id_produk']; ?>">Jual
-                                </a>
+                                <?php if($produk['stok'] > 0){ ?>
+                                  <a class="btn btn-primary btn-block"
+                                    href="<?= $base_url; ?>transaksi.php?id_produk=<?= $produk['id_produk']; ?>">Jual
+                                  </a>
+                                <?php } ?>
                                 <a class="btn btn-warning btn-block"
                                   href="<?= $base_url; ?>edit-produk.php?id_produk=<?= $produk['id_produk']; ?>">
                                   Edit
