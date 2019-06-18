@@ -119,10 +119,12 @@
                             <td><?= $transaksi['created_at']; ?></td>
                             <td><?= $transaksi['minuman']; ?></td>
                             <td>
-                            Rp. <?= number_format($transaksi['harga'], 0, '', '.'); ?>
+                              Rp. <?= number_format($transaksi['harga'] / $transaksi['jumlah'], 0, '', '.'); ?>
                             </td>
                             <td><?= $transaksi['jumlah']; ?></td>
-                            <td>Rp. <?= number_format($transaksi['harga'] * $transaksi['jumlah'], 0, '', '.'); ?></td>
+                            <td>
+                              Rp. <?= number_format($transaksi['harga'], 0, '', '.'); ?>
+                            </td>
                             <?php if(strtoupper($_SESSION['level']) == 'A') { ?>
                               <td><?= $transaksi['nama_pembeli']; ?></td>
                             <?php } ?>
@@ -145,14 +147,6 @@
     </main>
   </div>
   <footer class="app-footer">
-    <div>
-      <a href="https://coreui.io">CoreUI</a>
-      <span>&copy; 2018 creativeLabs.</span>
-    </div>
-    <div class="ml-auto">
-      <span>Powered by</span>
-      <a href="https://coreui.io">CoreUI</a>
-    </div>
   </footer>
   <?php include 'layout/bottom.php'; ?>
   </body>

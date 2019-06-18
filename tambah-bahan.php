@@ -49,6 +49,8 @@
     /* List Semua Supplier */
     $list_supplier_query = "SELECT * FROM tb_supplier";
     $list_supplier_result= mysqli_query($conn, $list_supplier_query);
+
+    $data_supplier_arr = array();
   }
 ?>
 <!DOCTYPE html>
@@ -154,14 +156,23 @@
                         <div class="input-group-prepend">
                           <span class="input-group-text">@</span>
                         </div>
-                        <select name="id_supplier" required="" class="form-control select2">
-                          <option disabled selected>Supplier</option>
+                        <select name="id_supplier" required="" class="form-control select2 nama-supplier-select">
+                          <option disabled selected value="">Supplier</option>
                           <?php
                             while($supplier = mysqli_fetch_array($list_supplier_result, MYSQLI_ASSOC)){
                               echo "<option value = \"$supplier[id_supplier]\">$supplier[nama]</option>";
+                              $data_supplier_arr[$supplier['id_supplier']] = $supplier['alamat'];
                             }
                           ?>
                         </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group alamat-supplier-wrapper" style="display: none">
+                    <label class="col-form-label" for="prependedInput">Alamat Supplier</label>
+                    <div class="controls">
+                      <div class="input-prepend input-group">
+                        <textarea name="alamat_supplier" class="form-control" readonly=""></textarea>
                       </div>
                     </div>
                   </div>
@@ -199,15 +210,10 @@
     </main>
   </div>
   <footer class="app-footer">
-    <div>
-      <a href="https://coreui.io">CoreUI</a>
-      <span>&copy; 2018 creativeLabs.</span>
-    </div>
-    <div class="ml-auto">
-      <span>Powered by</span>
-      <a href="https://coreui.io">CoreUI</a>
-    </div>
   </footer>
+  <script type="text/javascript">
+    var data_supplier = <?= json_encode($data_supplier_arr); ?>;
+  </script>
   <?php include 'layout/bottom.php'; ?>
   </body>
 </html>

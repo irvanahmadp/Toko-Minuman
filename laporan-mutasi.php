@@ -10,19 +10,33 @@
     if($_SERVER['REQUEST_METHOD']=='POST'){
       $tgl_mulai    = $_POST['tgl_mulai'];
       $tgl_selesai  = $_POST['tgl_selesai'];
-      $query_tgl    = " WHERE date(t.tanggal) BETWEEN '$tgl_mulai' AND '$tgl_selesai'";
+      $query_tgl    = " WHERE date(tanggal) BETWEEN '$tgl_mulai' AND '$tgl_selesai'";
     }else{
       $query_tgl    = "";
     }
 
+    // $list_transaksi_query = 
+    //   "SELECT t.tanggal, t.type, t.debit, t.credit, t.keterangan, p.nama AS nama_produk, b.nama AS nama_bahan
+    //   FROM tb_transaksi t
+    //     LEFT JOIN tb_produk p
+    //       ON t.id_produk = p.id_produk
+    //     LEFT JOIN tb_bahan b
+    //       ON t.id_produk = b.id_bahan
+    //   ".$query_tgl;
     $list_transaksi_query = 
-      "SELECT t.tanggal, t.type, t.debit, t.credit, t.keterangan, p.nama AS nama_produk, b.nama AS nama_bahan
-      FROM tb_transaksi t
-        LEFT JOIN tb_produk p
-          ON t.id_produk = p.id_produk
-        LEFT JOIN tb_bahan b
-          ON t.id_produk = b.id_bahan
-      ".$query_tgl;
+      "SELECT *
+        FROM
+        (SELECT tj.created_at AS tanggal, 'produk' AS type, tj.harga, tj.jumlah, 'Penjualan Produk' AS keterangan, p.nama AS nama_produk, '' AS nama_bahan
+          FROM tb_transaksi_jual tj
+            LEFT JOIN tb_produk p
+              ON tj.id_produk = p.id_produk
+          $query_tgl
+        UNION ALL
+        SELECT tb.created_at AS tanggal, 'bahan' AS type, tb.harga, tb.jumlah,'Pembelian Bahan' AS keterangan, '' AS nama_produk, tb.nama_bahan
+          FROM tb_transaksi_beli tb
+          $query_tgl
+        ) mutasi
+        ORDER BY tanggal ASC";
     $list_transaksi_result= mysqli_query($conn, $list_transaksi_query);
   }
   
@@ -87,22 +101,30 @@
                           $no = 1;
                           $total_pengeluaran = 0;
                           $total_pemasukan   = 0;
-                          while($transaksi = mysqli_fetch_array($list_transaksi_result, MYSQLI_ASSOC)){ ?>
+                          while($transaksi = mysqli_fetch_array($list_transaksi_result, MYSQLI_ASSOC)){ 
+                            if($transaksi['type']=='produk'){
+                              $pengeluaran  = 0;
+                              $pemasukan    = $transaksi['harga'];
+                            }else{
+                              $pengeluaran  = $transaksi['harga'];
+                              $pemasukan    = 0;
+                            }
+                          ?>
                             <tr>
                             <td><?= $no; ?></td>
                             <td><?= $transaksi['tanggal']; ?></td>
-                            <td><?= $transaksi['type']; ?></td>
+                            <td><?= ucfirst($transaksi['type']); ?></td>
                             <td><?= $transaksi['type'] == 'produk' 
                               ? $transaksi['nama_produk'] : $transaksi['nama_bahan']; ?></td>
                               <td><?= $transaksi['keterangan']; ?></td>
-                            <td>Rp. <?= number_format($transaksi['debit'], 0, '', '.'); ?></td>
-                            <td>Rp. <?= number_format($transaksi['credit'], 0, '', '.'); ?></td>
+                            <td>Rp. <?= number_format($pengeluaran, 0, '', '.'); ?></td>
+                            <td>Rp. <?= number_format($pemasukan, 0, '', '.'); ?></td>
                             </tr>
                             
                         <?php 
                             $no++;
-                            $total_pengeluaran = $total_pengeluaran + $transaksi['debit'];
-                            $total_pemasukan = $total_pemasukan + $transaksi['credit'];
+                            $total_pengeluaran = $total_pengeluaran + $pengeluaran;
+                            $total_pemasukan   = $total_pemasukan + $pemasukan;
                           } 
                         ?>
                       </tbody>
@@ -124,14 +146,6 @@
     </main>
   </div>
   <footer class="app-footer">
-    <div>
-      <a href="https://coreui.io">CoreUI</a>
-      <span>&copy; 2018 creativeLabs.</span>
-    </div>
-    <div class="ml-auto">
-      <span>Powered by</span>
-      <a href="https://coreui.io">CoreUI</a>
-    </div>
   </footer>
   <?php include 'layout/bottom.php'; ?>
   </body>

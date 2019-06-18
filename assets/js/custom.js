@@ -17,6 +17,14 @@ $(document).ready(function(){
       theme: "bootstrap"
     });
   }
+  $(".nama-supplier-select").change(function(){
+    if($(this).val() != '') {
+      $(".alamat-supplier-wrapper textarea").val(data_supplier[$(this).val()]);
+      $(".alamat-supplier-wrapper").show();
+    }else{
+      $(".alamat-supplier-wrapper").hide();
+    }
+  });
   $(".js-jumlah-produk").keyup(function(e){
     var harga_temp   = HapusTitik($("input[name=harga_jual]").val());
     var harga        = parseInt(harga_temp);
@@ -25,6 +33,15 @@ $(document).ready(function(){
     var total_hrg    = TambahTitik(total_hrg_int);
     if(!isNaN(total_hrg)){
       $("input[name=total_harga]").val(total_hrg);
+    }
+  });
+  $("input[name=sesuai_alamat_pendaftaran]").change(function(){
+    if($(this).is(":checked")){
+      $(this).parents(".form-group").find("textarea").prop('readonly', true);
+      $(this).parents(".form-group").find("textarea").prop('disabled', true);
+    }else{
+      $(this).parents(".form-group").find("textarea").prop('readonly', false);
+      $(this).parents(".form-group").find("textarea").prop('disabled', false);
     }
   });
 });

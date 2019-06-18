@@ -5,9 +5,14 @@
 
   $id_produk    = mysqli_real_escape_string($conn, $_GET['id_produk']);
 
-  $produk_query = "SELECT nama, harga, stok FROM tb_produk WHERE id_produk='$id_produk'";
+  $produk_query = "SELECT nama, harga, stok FROM tb_produk WHERE id_produk='$id_produk' LIMIT 1";
   $produk_result= mysqli_query($conn, $produk_query);
   $result_arr   = mysqli_fetch_array($produk_result);
+
+  $id_user      = $_SESSION['id_user'];
+  $user_query   = "SELECT alamat FROM tb_user WHERE id_user = '$id_user' LIMIT 1";
+  $user_result= mysqli_query($conn, $user_query);
+  $user_result_arr   = mysqli_fetch_array($user_result);
 
   if($_SESSION['level']=='A'){
     $title = 'Penjualan Minuman';
@@ -23,16 +28,22 @@
     $jumlah   = $_POST['jumlah'];
     $harga_jual= (int) filter_var($_POST['harga_jual'], FILTER_SANITIZE_NUMBER_INT);;
     $harga    = $harga_jual;
+    $total_harga= $harga * $jumlah;
     if(strtoupper($_SESSION['level'])=='A'){
       $nama   = mysqli_real_escape_string($conn, $_POST['nama']);
+      $alamat   = mysqli_real_escape_string($conn, $_POST['alamat_pembeli']);
     }else{
       $nama   = $_SESSION['nama'];
+      if(isset($_POST['sesuai_alamat_pendaftaran'])){
+        $alamat = $user_result_arr['alamat'];
+      }else{
+        $alamat = $_POST['alamat_pembeli'];
+      }
     }
-    $alamat   = mysqli_real_escape_string($conn, $_POST['alamat_pembeli']);
 
     $transaksi_penjualan_query =
       "INSERT INTO tb_transaksi_jual (created_at, id_produk, jumlah, harga, id_user, nama, alamat)
-        VALUES ('$tanggal', '$id_produk', '$jumlah', '$harga','$id_user', '$nama', '$alamat')";
+        VALUES ('$tanggal', '$id_produk', '$jumlah', '$total_harga','$id_user', '$nama', '$alamat')";
     $transaksi_tambah_penjualan_query = mysqli_query($conn, $transaksi_penjualan_query) or 
       die(mysqli_error($conn));
 
@@ -173,10 +184,22 @@
                     </div>
                   <?php } else{ ?>
                     <div class="form-group">
+                      <div class="checkbox">
+                        <label>
+                          <input type="checkbox" value="1" name="sesuai_alamat_pendaftaran" checked="">
+                          Alamat sesuai pendaftaran
+                        </label>
+                      </div>
                       <label class="col-form-label" for="prependedInput">Alamat</label>
                       <div class="controls">
                         <div class="input-prepend input-group">
-                          <textarea name="alamat_pembeli" class="form-control" required=""></textarea>
+                          <textarea 
+                            name="alamat_pembeli"
+                            class="form-control"
+                            required=""
+                            readonly=""
+                            disabled=""
+                          ><?= $user_result_arr['alamat']; ?></textarea>
                         </div>
                       </div>
                     </div>
@@ -194,14 +217,6 @@
     </main>
   </div>
   <footer class="app-footer">
-    <div>
-      <a href="https://coreui.io">CoreUI</a>
-      <span>&copy; 2018 creativeLabs.</span>
-    </div>
-    <div class="ml-auto">
-      <span>Powered by</span>
-      <a href="https://coreui.io">CoreUI</a>
-    </div>
   </footer>
   <?php include 'layout/bottom.php'; ?>
   </body>
