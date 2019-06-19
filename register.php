@@ -36,6 +36,7 @@
       $_SESSION['telp']   = $telp;
       $_SESSION['email']  = $email;
       $_SESSION['level']  = "M";
+      header( "Refresh:3; url=".$base_url."produk.php", true, 303);
     }
   }
 ?>
