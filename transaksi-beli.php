@@ -23,11 +23,11 @@
       $jumlah     = (int) filter_var($_POST['jumlah'], FILTER_SANITIZE_NUMBER_INT);
       $satuan     = mysqli_real_escape_string($conn, $_POST['satuan']);
 
-      $tambah_bahan_query = 
-        "INSERT INTO tb_bahan (created_at,  nama, id_supplier, jumlah, satuan, harga)
-          VALUES ('$tanggal', '$nama', '$id_supplier', '$jumlah', '$satuan', '$harga')";
-      $tambah_bahan_result = mysqli_query($conn, $tambah_bahan_query) or die(mysqli_error($conn));
-      $id_bahan = mysqli_insert_id($conn);
+      // $tambah_bahan_query = 
+      //   "INSERT INTO tb_bahan (created_at,  nama, id_supplier, jumlah, satuan, harga)
+      //     VALUES ('$tanggal', '$nama', '$id_supplier', '$jumlah', '$satuan', '$harga')";
+      // $tambah_bahan_result = mysqli_query($conn, $tambah_bahan_query) or die(mysqli_error($conn));
+      // $id_bahan = mysqli_insert_id($conn);
 
       $id_user  = $_SESSION['id_user'];
       /*$transaksi_tambah_bahan_query =
@@ -43,7 +43,7 @@
         die(mysqli_error($conn));
 
       $add_bahan_msg = "Bahan berhasil ditambahkan";
-      header( "Refresh:3; url=".$base_url."bahan.php", true, 303);
+      header( "Refresh:3; url=".$base_url."laporan-mutasi.php", true, 303);
     }
 
     /* List Semua Supplier */
@@ -56,7 +56,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Tambah Bahan</title>
+  <title>Transaksi Beli</title>
   <?php include 'layout/head.php'; ?>
 </head>
 <body class="app header-fixed sidebar-md-show sidebar-fixed">

@@ -12,17 +12,23 @@
               Tambah Minuman
             </a>
           </li>
-          <li class="nav-item ">
+          <!-- <li class="nav-item ">
             <a class="nav-link" href="<?= $base_url; ?>produk.php">
               Jual Minuman
             </a>
-          </li>
+          </li> -->
         </ul>
       </li>
       <li class="nav-item docs-sidenav-active">
-        <a class="nav-link" href="<?= $base_url; ?>bahan.php">
-          <i class="fas fa-warehouse" style="margin-right: 7.5px"></i>
-          Bahan
+        <a class="nav-link" href="<?= $base_url; ?>produk.php">
+          <i class="fas fa-shopping-cart" style="margin-right: 7.5px"></i>
+          Transaksi Jual
+        </a>
+      </li>
+      <li class="nav-item docs-sidenav-active">
+        <a class="nav-link" href="<?= $base_url; ?>transaksi-beli.php">
+          <i class="fas fa-shopping-cart" style="margin-right: 7.5px"></i>
+          Transaksi Beli
         </a>
       </li>
       <li class="nav-item docs-sidenav-active">

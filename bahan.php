@@ -9,9 +9,9 @@
   }
 
   $list_bahan_query = 
-    "SELECT bahan.*, supplier.nama AS nama_supplier, supplier.alamat AS alamat_supplier FROM tb_bahan bahan
+    "SELECT tb_transaksi_beli.*, supplier.nama AS nama_supplier, supplier.alamat AS alamat_supplier FROM tb_transaksi_beli
     INNER JOIN tb_supplier supplier
-      ON bahan.id_supplier = supplier.id_supplier";
+      ON tb_transaksi_beli.id_supplier = supplier.id_supplier";
   $list_bahan_result= mysqli_query($conn, $list_bahan_query);
 ?>
 <!DOCTYPE html>
@@ -68,7 +68,7 @@
                           while($bahan = mysqli_fetch_array($list_bahan_result, MYSQLI_ASSOC)){ ?>
                             <tr>
                             <td><?= $no ?></td>
-                            <td><?= $bahan['nama']; ?> </td>
+                            <td><?= $bahan['nama_bahan']; ?> </td>
                             <td><?= $bahan['nama_supplier']; ?></td>
                             <td><?= $bahan['alamat_supplier']; ?></td>
                             <td><?= $bahan['jumlah'].' '.$bahan['satuan']; ?> </td>
