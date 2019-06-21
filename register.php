@@ -31,12 +31,13 @@
           VALUES ('$tanggal', '$nama', 'M', '$email', '$telp', '$password', '$alamat')";
       $register_result = mysqli_query($conn, $register_query);
       $id_user = mysqli_insert_id($conn);
-      $_SESSION['id_user']= $id_user;
-      $_SESSION['nama']   = $nama;
-      $_SESSION['telp']   = $telp;
-      $_SESSION['email']  = $email;
-      $_SESSION['level']  = "M";
-      header( "Refresh:3; url=".$base_url."produk.php", true, 303);
+      // $_SESSION['id_user']= $id_user;
+      // $_SESSION['nama']   = $nama;
+      // $_SESSION['telp']   = $telp;
+      // $_SESSION['email']  = $email;
+      // $_SESSION['level']  = "M";
+      //header( "Refresh:3; url=".$base_url."produk.php", true, 303);
+      header( "Refresh:3; url=".$base_url."login.php", true, 303);
     }
   }
 ?>

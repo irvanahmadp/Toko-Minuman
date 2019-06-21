@@ -10,9 +10,11 @@
     if($_SERVER['REQUEST_METHOD']=='POST'){
       $tgl_mulai    = $_POST['tgl_mulai'];
       $tgl_selesai  = $_POST['tgl_selesai'];
-      $query_tgl    = " WHERE date(tanggal) BETWEEN '$tgl_mulai' AND '$tgl_selesai'";
+      $query_tgl_tj    = " WHERE date(tj.created_at) BETWEEN '$tgl_mulai' AND '$tgl_selesai'";
+      $query_tgl_tb    = " WHERE date(tb.created_at) BETWEEN '$tgl_mulai' AND '$tgl_selesai'";
     }else{
-      $query_tgl    = "";
+      $query_tgl_tj    = "";
+      $query_tgl_tb    = "";
     }
 
     // $list_transaksi_query = 
@@ -23,18 +25,18 @@
     //     LEFT JOIN tb_bahan b
     //       ON t.id_produk = b.id_bahan
     //   ".$query_tgl;
-    $list_transaksi_query = 
+   $list_transaksi_query = 
       "SELECT *
         FROM
         (SELECT tj.created_at AS tanggal, 'produk' AS type, tj.harga, tj.jumlah, 'Penjualan Produk' AS keterangan, p.nama AS nama_produk, '' AS nama_bahan
           FROM tb_transaksi_jual tj
             LEFT JOIN tb_produk p
               ON tj.id_produk = p.id_produk
-          $query_tgl
+          $query_tgl_tj
         UNION ALL
         SELECT tb.created_at AS tanggal, 'bahan' AS type, tb.harga, tb.jumlah,'Pembelian Bahan' AS keterangan, '' AS nama_produk, tb.nama_bahan
           FROM tb_transaksi_beli tb
-          $query_tgl
+          $query_tgl_tb
         ) mutasi
         ORDER BY tanggal ASC";
     $list_transaksi_result= mysqli_query($conn, $list_transaksi_query);
