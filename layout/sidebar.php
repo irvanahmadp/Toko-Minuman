@@ -1,23 +1,11 @@
 <nav class="sidebar-nav">
   <ul class="nav">
     <?php if($_SESSION['level']=='A'){ /* Jika Admin */ ?>
-      <li class="nav-item  nav-dropdown  active">
-        <a class="nav-link  nav-dropdown-toggle " href="#">
+      <li class="nav-item docs-sidenav-active">
+        <a class="nav-link" href="<?= $base_url; ?>tambah-produk.php">
           <i class="fas fa-coffee" style="margin-right: 7.5px"></i>
-          Produk
+          Tambah Produk
         </a>
-        <ul class="nav-dropdown-items">
-          <li class="nav-item active docs-sidenav-active">
-            <a class="nav-link" href="<?= $base_url; ?>tambah-produk.php">
-              Tambah Minuman
-            </a>
-          </li>
-          <!-- <li class="nav-item ">
-            <a class="nav-link" href="<?= $base_url; ?>produk.php">
-              Jual Minuman
-            </a>
-          </li> -->
-        </ul>
       </li>
       <li class="nav-item docs-sidenav-active">
         <a class="nav-link" href="<?= $base_url; ?>produk.php">
@@ -37,6 +25,29 @@
           Supplier
         </a>
       </li>
+      <li class="nav-item nav-dropdown">
+        <a class="nav-link  nav-dropdown-toggle " href="#">
+          <i class="fas fa-list-alt" style="margin-right: 7.5px"></i>
+          Laporan
+        </a>
+        <ul class="nav-dropdown-items">
+          <li class="nav-item active docs-sidenav-active">
+            <a class="nav-link" href="<?= $base_url; ?>laporan-transaksi.php">
+              Transaksi Jual
+            </a>
+          </li>
+          <li class="nav-item ">
+            <a class="nav-link" href="<?= $base_url; ?>laporan-transaksi-beli.php">
+              Transaksi Beli
+            </a>
+          </li>
+          <li class="nav-item ">
+            <a class="nav-link" href="<?= $base_url; ?>laporan-mutasi.php">
+              Mutasi
+            </a>
+          </li>
+        </ul>
+      </li>
     <?php }else{ /* Jika Bukan Admin */?>
       <li class="nav-item docs-sidenav-active">
         <a class="nav-link" href="<?= $base_url; ?>produk.php">
@@ -44,7 +55,6 @@
           Beli Minuman
         </a>
       </li>
-    <?php } ?>
     <!-- Semua Member -->
     <li class="nav-item nav-dropdown">
       <a class="nav-link  nav-dropdown-toggle " href="#">
@@ -57,15 +67,8 @@
             Transaksi
           </a>
         </li>
-        <?php if($_SESSION['level']=='A'){ ?>
-          <!-- Admin member -->
-          <li class="nav-item ">
-            <a class="nav-link" href="<?= $base_url; ?>laporan-mutasi.php">
-              Mutasi
-            </a>
-          </li>
-        <?php } ?>
       </ul>
     </li>
+    <?php } ?>
   </ul>
 </nav>

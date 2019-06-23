@@ -14,7 +14,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Toko Minuman</title>
+  <title>Daftar Minuman</title>
   <?php include 'layout/head.php'; ?>
 </head>
 <body class="app header-fixed sidebar-md-show sidebar-fixed">

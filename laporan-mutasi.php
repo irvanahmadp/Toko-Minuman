@@ -6,7 +6,8 @@
   if(strtoupper($_SESSION['level']) != 'A'){
     header("Location:".$base_url.'index.php');
   }else{
-
+    $tgl_mulai    = '';
+    $tgl_selesai  = '';
     if($_SERVER['REQUEST_METHOD']=='POST'){
       $tgl_mulai    = $_POST['tgl_mulai'];
       $tgl_selesai  = $_POST['tgl_selesai'];
@@ -28,13 +29,13 @@
    $list_transaksi_query = 
       "SELECT *
         FROM
-        (SELECT tj.created_at AS tanggal, 'produk' AS type, tj.harga, tj.jumlah, 'Penjualan Produk' AS keterangan, p.nama AS nama_produk, '' AS nama_bahan
+        (SELECT tj.created_at AS tanggal, 'produk' AS type, tj.total_harga, tj.jumlah, 'Penjualan Produk' AS keterangan, p.nama AS nama_produk, '' AS nama_bahan
           FROM tb_transaksi_jual tj
             LEFT JOIN tb_produk p
               ON tj.id_produk = p.id_produk
           $query_tgl_tj
         UNION ALL
-        SELECT tb.created_at AS tanggal, 'bahan' AS type, tb.harga, tb.jumlah,'Pembelian Bahan' AS keterangan, '' AS nama_produk, tb.nama_bahan
+        SELECT tb.created_at AS tanggal, 'bahan' AS type, tb.total_harga, tb.jumlah,'Pembelian Bahan' AS keterangan, '' AS nama_produk, tb.nama_bahan
           FROM tb_transaksi_beli tb
           $query_tgl_tb
         ) mutasi
@@ -74,10 +75,10 @@
                 <form style="margin-bottom: 25px" method="POST">
                   <div class="form-row">
                     <div class="col-2">
-                      <input type="text" class="form-control datepicker" placeholder="Dari Tanggal" name="tgl_mulai" required="">
+                      <input type="text" class="form-control datepicker" placeholder="Dari Tanggal" name="tgl_mulai" required="" value="<?= $tgl_mulai; ?>">
                     </div>
                     <div class="col-2">
-                      <input type="text" class="form-control datepicker" placeholder="Sampai Tanggal" name="tgl_selesai" required="">
+                      <input type="text" class="form-control datepicker" placeholder="Sampai Tanggal" name="tgl_selesai" required="" value="<?= $tgl_selesai; ?>">
                     </div>
                     <div class="col-3">
                       <button class="btn btn-primary">Lihat</button>
@@ -106,9 +107,9 @@
                           while($transaksi = mysqli_fetch_array($list_transaksi_result, MYSQLI_ASSOC)){ 
                             if($transaksi['type']=='produk'){
                               $pengeluaran  = 0;
-                              $pemasukan    = $transaksi['harga'];
+                              $pemasukan    = $transaksi['total_harga'];
                             }else{
-                              $pengeluaran  = $transaksi['harga'];
+                              $pengeluaran  = $transaksi['total_harga'];
                               $pemasukan    = 0;
                             }
                           ?>

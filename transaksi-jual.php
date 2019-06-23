@@ -42,10 +42,11 @@
     }
 
     $transaksi_penjualan_query =
-      "INSERT INTO tb_transaksi_jual (created_at, id_produk, jumlah, harga, id_user, nama, alamat)
-        VALUES ('$tanggal', '$id_produk', '$jumlah', '$total_harga','$id_user', '$nama', '$alamat')";
-    $transaksi_tambah_penjualan_query = mysqli_query($conn, $transaksi_penjualan_query) or 
+      "INSERT INTO tb_transaksi_jual (created_at, id_produk, jumlah, harga, total_harga, id_user, nama, alamat)
+        VALUES ('$tanggal', '$id_produk', '$jumlah', '$harga', '$total_harga','$id_user', '$nama', '$alamat')";
+    $transaksi_penjualan_result = mysqli_query($conn, $transaksi_penjualan_query) or 
       die(mysqli_error($conn));
+    $id_transaksi_jual = mysqli_insert_id($conn);
 
     $update_stok_query =
       "UPDATE tb_produk
@@ -56,7 +57,12 @@
     $update_stok_result = mysqli_query($conn, $update_stok_query) or 
       die(mysqli_error($conn));
 
-    header("Location:".$base_url.'produk.php');
+    $transaksi_query =
+      "INSERT INTO tb_transaksi (created_at, type, id_transaksi_detail, pemasukan, pengeluaran)
+        VALUES ('$tanggal', 'jual', '$id_transaksi_jual', '$total_harga', 0)";
+    $transaksi_result = mysqli_query($conn, $transaksi_query);
+
+    header("Location:".$base_url.'laporan-transaksi.php');
   }
 ?>
 <!DOCTYPE html>

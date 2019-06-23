@@ -3,6 +3,8 @@
   include 'config/url.php';
   include 'function/check-login.php';
 
+  $tgl_mulai    = '';
+  $tgl_selesai  = '';
   if($_SERVER['REQUEST_METHOD']=='POST'){
     $tgl_mulai    = $_POST['tgl_mulai'];
     $tgl_selesai  = $_POST['tgl_selesai'];
@@ -26,7 +28,7 @@
     //       ON t.id_produk = p.id_produk
     //   WHERE type = 'produk'".$query_tgl;
     $list_transaksi_query = 
-      "SELECT t.created_at, t.harga, t.jumlah, t.nama as nama_pembeli, t.alamat as alamat_pembeli, p.nama as minuman
+      "SELECT t.created_at, t.harga, t.jumlah, t.nama as nama_pembeli, t.total_harga, t.alamat as alamat_pembeli, p.nama as minuman
       FROM tb_transaksi_jual t
         INNER JOIN tb_produk p
           ON t.id_produk = p.id_produk
@@ -42,7 +44,7 @@
     //   WHERE type = 'produk'
     //     AND id_user = '$_SESSION[id_user]'".$query_tgl;
     $list_transaksi_query = 
-      "SELECT t.created_at, t.harga, t.jumlah, t.nama as nama_pembeli, t.alamat as alamat_pembeli, p.nama as minuman
+      "SELECT t.created_at, t.harga, t.jumlah, t.total_harga, t.nama as nama_pembeli, t.alamat as alamat_pembeli, p.nama as minuman
       FROM tb_transaksi_jual t
         INNER JOIN tb_produk p
           ON t.id_produk = p.id_produk
@@ -83,10 +85,10 @@
                 <form style="margin-bottom: 25px" method="POST">
                   <div class="form-row">
                     <div class="col-2">
-                      <input type="text" class="form-control datepicker" placeholder="Dari Tanggal" name="tgl_mulai" required="">
+                      <input type="text" class="form-control datepicker" placeholder="Dari Tanggal" name="tgl_mulai" required="" value="<?= $tgl_mulai;?>">
                     </div>
                     <div class="col-2">
-                      <input type="text" class="form-control datepicker" placeholder="Sampai Tanggal" name="tgl_selesai" required="">
+                      <input type="text" class="form-control datepicker" placeholder="Sampai Tanggal" name="tgl_selesai" required="" value="<?= $tgl_selesai;?>">
                     </div>
                     <div class="col-3">
                       <button class="btn btn-primary">Lihat</button>
@@ -119,11 +121,11 @@
                             <td><?= $transaksi['created_at']; ?></td>
                             <td><?= $transaksi['minuman']; ?></td>
                             <td>
-                              Rp. <?= number_format($transaksi['harga'] / $transaksi['jumlah'], 0, '', '.'); ?>
+                              Rp. <?= number_format($transaksi['harga'], 0, '', '.'); ?>
                             </td>
                             <td><?= $transaksi['jumlah']; ?></td>
                             <td>
-                              Rp. <?= number_format($transaksi['harga'], 0, '', '.'); ?>
+                              Rp. <?= number_format($transaksi['total_harga'], 0, '', '.'); ?>
                             </td>
                             <?php if(strtoupper($_SESSION['level']) == 'A') { ?>
                               <td><?= $transaksi['nama_pembeli']; ?></td>

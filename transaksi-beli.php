@@ -6,8 +6,6 @@
     header("Location:".$base_url.'index.php');
   }else{
     if($_SERVER['REQUEST_METHOD'] == "POST"){
-      $harga = (int) filter_var($_POST['harga'], FILTER_SANITIZE_NUMBER_INT);
-
       $time       = time();
       $tanggal    = date('Y-m-d H:i:s');
       $nama       = mysqli_real_escape_string($conn, $_POST['nama']);
@@ -23,11 +21,8 @@
       $jumlah     = (int) filter_var($_POST['jumlah'], FILTER_SANITIZE_NUMBER_INT);
       $satuan     = mysqli_real_escape_string($conn, $_POST['satuan']);
 
-      // $tambah_bahan_query = 
-      //   "INSERT INTO tb_bahan (created_at,  nama, id_supplier, jumlah, satuan, harga)
-      //     VALUES ('$tanggal', '$nama', '$id_supplier', '$jumlah', '$satuan', '$harga')";
-      // $tambah_bahan_result = mysqli_query($conn, $tambah_bahan_query) or die(mysqli_error($conn));
-      // $id_bahan = mysqli_insert_id($conn);
+      $total_harga = (int) filter_var($_POST['total_harga'], FILTER_SANITIZE_NUMBER_INT);
+      $harga       = $total_harga / $jumlah;
 
       $id_user  = $_SESSION['id_user'];
       /*$transaksi_tambah_bahan_query =
@@ -37,13 +32,19 @@
         die(mysqli_error($conn));*/
 
       $transaksi_tambah_bahan_query =
-        "INSERT INTO tb_transaksi_beli (created_at, nama_bahan, jumlah, satuan, harga, id_supplier)
-          VALUES ('$tanggal', '$nama', '$jumlah', '$satuan', '$harga', '$id_supplier')";
+        "INSERT INTO tb_transaksi_beli (created_at, nama_bahan, jumlah, satuan, harga, total_harga, id_supplier)
+          VALUES ('$tanggal', '$nama', '$jumlah', '$satuan', '$harga', '$total_harga', '$id_supplier')";
       $transaksi_tambah_bahan_result = mysqli_query($conn, $transaksi_tambah_bahan_query) or 
         die(mysqli_error($conn));
+      $id_transaksi_beli = mysqli_insert_id($conn);
+
+      $transaksi_query =
+      "INSERT INTO tb_transaksi (created_at, type, id_transaksi_detail, pemasukan, pengeluaran)
+        VALUES ('$tanggal', 'beli', '$id_transaksi_beli', 0, '$total_harga')";
+      $transaksi_result = mysqli_query($conn, $transaksi_query);
 
       $add_bahan_msg = "Bahan berhasil ditambahkan";
-      header( "Refresh:3; url=".$base_url."laporan-mutasi.php", true, 303);
+      header( "Refresh:3; url=".$base_url."laporan-transaksi-beli.php", true, 303);
     }
 
     /* List Semua Supplier */
@@ -81,8 +82,8 @@
     <main class="main">
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-          <li class="breadcrumb-item "><a href="<?= $base_url; ?>bahan.php">Bahan</a></li>
-          <li class="breadcrumb-item active">Tambah Bahan</li>
+          <li class="breadcrumb-item "><a href="<?= $base_url; ?>">Home</a></li>
+          <li class="breadcrumb-item active">Transaksi Beli</li>
         </ol>
       </nav>
       <div class="container-fluid">
@@ -90,7 +91,7 @@
           <div class="col-lg-12">
             <div class="card">
               <div class="card-header">
-                <i class="fa fa-edit"></i>Form Penambahan Bahan
+                <i class="fa fa-edit"></i>Form Pembelian Bahan
                 <div class="card-header-actions">
                   <a class="btn-setting d-sm-down-none" href="#">
                     <i class="icon-settings"></i>
@@ -145,7 +146,7 @@
                         <div class="input-group-prepend">
                           <span class="input-group-text">Rp</span>
                         </div>
-                        <input class="form-control" id="prependedInput" onkeyup="FormatCurrency(this)" size="16" type="text" name="harga" required="">
+                        <input class="form-control" id="prependedInput" onkeyup="FormatCurrency(this)" size="16" type="text" name="total_harga" required="">
                       </div>
                     </div>
                   </div>
