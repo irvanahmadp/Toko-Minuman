@@ -39,7 +39,7 @@
       $id_transaksi_beli = mysqli_insert_id($conn);
 
       $transaksi_query =
-      "INSERT INTO tb_transaksi (created_at, type, id_transaksi_detail, pemasukan, pengeluaran)
+      "INSERT INTO tb_mutasi (created_at, type, id_transaksi_detail, pemasukan, pengeluaran)
         VALUES ('$tanggal', 'beli', '$id_transaksi_beli', 0, '$total_harga')";
       $transaksi_result = mysqli_query($conn, $transaksi_query);
 

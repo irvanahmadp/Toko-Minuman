@@ -15,11 +15,9 @@
       $_SESSION['telp']   = $result_arr['telp'];
       $_SESSION['email']  = $result_arr['email'];
       $_SESSION['level']  = $result_arr['level'];
-      if($result_arr['level'] == 'A'){
-        header("Location:".$base_url.'index.php');
-      }else{
-        header("Location:".$base_url.'produk.php');
-      }
+      
+      header("Location:".$base_url.'index.php');
+      
     }else{
       /* Jika Login Gagal */
       $login_error_msg = "Email atau password salah";

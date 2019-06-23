@@ -9,3 +9,16 @@
 .message-alert.body{
   top:65;
 }
+.image-galery{
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
+.image-galery .img-thumbnail{
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.image-galery img{
+  margin: auto;
+}
