@@ -14,17 +14,21 @@
     $tgl_selesai  = $_POST['tgl_selesai'];
     if(strtoupper($_SESSION['level']) == 'A'){
       /* Jika user admin maka where hanya tanggal */
-      $query_tgl    = " WHERE date(t.created_at) BETWEEN '$tgl_mulai' AND '$tgl_selesai'";
+      $query_tgl    = " WHERE date(tb_transaksi_beli.created_at) BETWEEN '$tgl_mulai' AND '$tgl_selesai'";
     }else{
       /* Jika user selain admin maka where id_user dan tanggal */
-      $query_tgl    = " AND date(t.created_at) BETWEEN '$tgl_mulai' AND '$tgl_selesai'";
+      $query_tgl    = " AND date(tb_transaksi_beli.created_at) BETWEEN '$tgl_mulai' AND '$tgl_selesai'";
     }
   }else{
     $query_tgl    = "";
   }
 
   $list_bahan_query = 
-    "SELECT tb_transaksi_beli.*, supplier.nama AS nama_supplier, supplier.alamat AS alamat_supplier FROM tb_transaksi_beli
+    "SELECT tb_transaksi_beli_detail.*, tb_transaksi_beli.created_at, tb_bahan.nama AS nama_bahan, supplier.nama AS nama_supplier, supplier.alamat AS alamat_supplier FROM tb_transaksi_beli_detail
+    INNER JOIN tb_bahan
+      ON tb_transaksi_beli_detail.id_bahan = tb_bahan.id_bahan
+    INNER JOIN tb_transaksi_beli
+      ON tb_transaksi_beli_detail.id_transaksi_beli = tb_transaksi_beli.id_transaksi_beli
     INNER JOIN tb_supplier supplier
       ON tb_transaksi_beli.id_supplier = supplier.id_supplier ".
     $query_tgl;
@@ -76,6 +80,7 @@
                     <thead>
                       <tr>
                         <th>No</th>
+                        <th>Tanggal</th>
                         <th>Nama Bahan</th>
                         <th>Nama Supplier</th>
                         <th>Alamat Supplier</th>
@@ -90,6 +95,7 @@
                         while($bahan = mysqli_fetch_array($list_bahan_result, MYSQLI_ASSOC)){ ?>
                           <tr>
                           <td><?= $no ?></td>
+                          <td><?= $bahan['created_at']; ?> </td>
                           <td><?= $bahan['nama_bahan']; ?> </td>
                           <td><?= $bahan['nama_supplier']; ?></td>
                           <td><?= $bahan['alamat_supplier']; ?></td>

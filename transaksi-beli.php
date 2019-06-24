@@ -8,7 +8,16 @@
     if($_SERVER['REQUEST_METHOD'] == "POST"){
       $time       = time();
       $tanggal    = date('Y-m-d H:i:s');
-      $nama       = mysqli_real_escape_string($conn, $_POST['nama']);
+
+      $id_bahan_post = mysqli_real_escape_string($conn, $_POST['id_bahan']);
+      if($id_bahan_post == 'other'){
+        $nama       = mysqli_real_escape_string($conn, $_POST['nama_bahan_input']);
+      }else{
+        $nama_bahan_query   = "SELECT nama FROM tb_bahan WHERE id_bahan = '$id_bahan_post' LIMIT 1";
+        $nama_bahan_result  = mysqli_query($conn, $nama_bahan_query);
+        $nama_bahan         = mysqli_fetch_array($nama_bahan_result, MYSQLI_ASSOC);
+        $nama               = $nama_bahan['nama'];
+      }
 
       $id_supplier          = mysqli_real_escape_string($conn, $_POST['id_supplier']);
       $data_supplier_query  = "SELECT * FROM tb_supplier WHERE id_supplier = '$id_supplier' LIMIT 1";
@@ -25,33 +34,54 @@
       $harga       = $total_harga / $jumlah;
 
       $id_user  = $_SESSION['id_user'];
-      /*$transaksi_tambah_bahan_query =
-        "INSERT INTO tb_transaksi (tanggal_key, tanggal, id_user, type, id_produk, jumlah, debit, credit, keterangan, nama, alamat)
-          VALUES ('$time', '$tanggal', '$id_user', '$type', '$id_bahan', '$jumlah', '$harga', 0, '$keterangan', '$nama_supplier', '$alamat_supplier')";
-      $transaksi_tambah_bahan_result = mysqli_query($conn, $transaksi_tambah_bahan_query) or 
-        die(mysqli_error($conn));*/
 
-      $transaksi_tambah_bahan_query =
-        "INSERT INTO tb_transaksi_beli (created_at, nama_bahan, jumlah, satuan, harga, total_harga, id_supplier)
-          VALUES ('$tanggal', '$nama', '$jumlah', '$satuan', '$harga', '$total_harga', '$id_supplier')";
-      $transaksi_tambah_bahan_result = mysqli_query($conn, $transaksi_tambah_bahan_query) or 
+      if($id_bahan_post == 'other'){
+        /* Jika Bahan Belum Tersedia Atau Pembelian Bahan Baru */
+        $tambah_bahan_query =
+          "INSERT INTO tb_bahan (created_at, updated_at, nama, stok, satuan)
+            VALUES ('$tanggal', '$tanggal', '$nama', '$jumlah', '$satuan')";
+        $tambah_bahan_result = mysqli_query($conn, $tambah_bahan_query) or 
+          die(mysqli_error($conn));
+        $id_bahan = mysqli_insert_id($conn);
+      }else{
+        $update_bahan_query =
+          "UPDATE tb_bahan
+          SET updated_at = '$tanggal',
+            stok         = stok + $jumlah
+          WHERE id_bahan = '$id_bahan_post' 
+          LIMIT 1
+          ";
+        $update_bahan_result = mysqli_query($conn, $update_bahan_query) or 
+          die(mysqli_error($conn));
+        $id_bahan = $id_bahan_post;
+      }
+
+      $transaksi_beli_query =
+        "INSERT INTO tb_transaksi_beli (created_at, total_harga, id_supplier)
+          VALUES ('$tanggal', '$total_harga', '$id_supplier')";
+      $transaksi_beli_result = mysqli_query($conn, $transaksi_beli_query) or 
         die(mysqli_error($conn));
       $id_transaksi_beli = mysqli_insert_id($conn);
 
-      $transaksi_query =
-      "INSERT INTO tb_mutasi (created_at, type, id_transaksi_detail, pemasukan, pengeluaran)
-        VALUES ('$tanggal', 'beli', '$id_transaksi_beli', 0, '$total_harga')";
-      $transaksi_result = mysqli_query($conn, $transaksi_query);
+      $transaksi_beli_detail_query =
+        "INSERT INTO tb_transaksi_beli_detail (id_transaksi_beli, id_bahan, jumlah, satuan, harga, total_harga)
+          VALUES ('$id_transaksi_beli', '$id_bahan', '$jumlah', '$satuan', '$harga','$total_harga')";
+      $transaksi_beli_detail_result = mysqli_query($conn, $transaksi_beli_detail_query) or 
+        die(mysqli_error($conn));
 
       $add_bahan_msg = "Bahan berhasil ditambahkan";
       header( "Refresh:3; url=".$base_url."laporan-transaksi-beli.php", true, 303);
     }
 
-    /* List Semua Supplier */
-    $list_supplier_query = "SELECT * FROM tb_supplier";
-    $list_supplier_result= mysqli_query($conn, $list_supplier_query);
+    /* List Semua Bahan */
+    $list_bahan_query       = "SELECT id_bahan, nama, satuan FROM tb_bahan";
+    $list_bahan_result      = mysqli_query($conn, $list_bahan_query);
+    $data_satuan_bahan_arr  = array();
 
-    $data_supplier_arr = array();
+    /* List Semua Supplier */
+    $list_supplier_query    = "SELECT * FROM tb_supplier";
+    $list_supplier_result   = mysqli_query($conn, $list_supplier_query);
+    $data_supplier_arr      = array();
   }
 ?>
 <!DOCTYPE html>
@@ -113,7 +143,27 @@
                         <div class="input-group-prepend">
                           <span class="input-group-text">@</span>
                         </div>
-                        <input class="form-control" id="prependedInput" size="16" type="text" name="nama" required="">
+                        <select name="id_bahan" required="" class="form-control select2 nama-bahan-select">
+                          <option disabled selected value="">Bahan</option>
+                          <option value="other">Ketik Baru</option>
+                          <?php
+                            while($bahan = mysqli_fetch_array($list_bahan_result, MYSQLI_ASSOC)){
+                              echo "<option value = \"$bahan[id_bahan]\">$bahan[nama]</option>";
+                              $data_satuan_bahan_arr[$bahan['id_bahan']] = $bahan['satuan'];
+                            }
+                          ?>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group" style="display: none;">
+                    <label class="col-form-label" for="prependedInput">Ketikan Nama Bahan</label>
+                    <div class="controls">
+                      <div class="input-prepend input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">@</span>
+                        </div>
+                        <input class="form-control nama-bahan-input" id="prependedInput" size="16" type="text" name="nama_bahan_input" required="" disabled>
                       </div>
                     </div>
                   </div>
@@ -214,6 +264,7 @@
   </footer>
   <script type="text/javascript">
     var data_supplier = <?= json_encode($data_supplier_arr); ?>;
+    var data_satuan_bahan = <?= json_encode($data_satuan_bahan_arr); ?>;
   </script>
   <?php include 'layout/bottom.php'; ?>
   </body>

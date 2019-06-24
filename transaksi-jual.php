@@ -57,11 +57,6 @@
     $update_stok_result = mysqli_query($conn, $update_stok_query) or 
       die(mysqli_error($conn));
 
-    $transaksi_query =
-      "INSERT INTO tb_mutasi (created_at, type, id_transaksi_detail, pemasukan, pengeluaran)
-        VALUES ('$tanggal', 'jual', '$id_transaksi_jual', '$total_harga', 0)";
-    $transaksi_result = mysqli_query($conn, $transaksi_query);
-
     header("Location:".$base_url.'laporan-transaksi.php');
   }
 ?>

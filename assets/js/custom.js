@@ -25,6 +25,19 @@ $(document).ready(function(){
       $(".alamat-supplier-wrapper").hide();
     }
   });
+  $(".nama-bahan-select").change(function(){
+    if($(this).val() == 'other'){
+      $(".nama-bahan-input").parents(".form-group").show();
+      $(".nama-bahan-input").prop("disabled", false);
+      $("input[name=satuan").val('');
+      $("input[name=satuan").prop('readonly', false);
+    }else{
+      $(".nama-bahan-input").parents(".form-group").hide();
+      $(".nama-bahan-input").prop("disabled", true);
+      $("input[name=satuan").val(data_satuan_bahan[$(this).val()]);
+      $("input[name=satuan").prop('readonly', true);
+    }
+  });
   $(".js-jumlah-produk").keyup(function(e){
     var harga_temp   = HapusTitik($("input[name=harga_jual]").val());
     var harga        = parseInt(harga_temp);
