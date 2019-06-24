@@ -44,6 +44,10 @@ $(document).ready(function(){
       $(this).parents(".form-group").find("textarea").prop('disabled', false);
     }
   });
+  $("button[type=cancel]").click(function(e){
+    e.preventDefault();
+    window.history.back();
+  });
 });
 function FormatCurrency(objNum){
    var num = objNum.value
