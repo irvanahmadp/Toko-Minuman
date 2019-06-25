@@ -11,36 +11,51 @@
     if($_SERVER['REQUEST_METHOD']=='POST'){
       $tgl_mulai    = $_POST['tgl_mulai'];
       $tgl_selesai  = $_POST['tgl_selesai'];
-      $query_tgl_tj    = " WHERE date(tj.created_at) BETWEEN '$tgl_mulai' AND '$tgl_selesai'";
-      $query_tgl_tb    = " WHERE date(tb.created_at) BETWEEN '$tgl_mulai' AND '$tgl_selesai'";
+      $query_tgl_tj    = " WHERE date(tb_trx_jual.created_at) BETWEEN '$tgl_mulai' AND '$tgl_selesai'";
+      $query_tgl_tb    = " WHERE date(tb_trx_beli.created_at) BETWEEN '$tgl_mulai' AND '$tgl_selesai'";
     }else{
       $query_tgl_tj    = "";
       $query_tgl_tb    = "";
     }
 
-    // $list_transaksi_query = 
-    //   "SELECT t.tanggal, t.type, t.debit, t.credit, t.keterangan, p.nama AS nama_produk, b.nama AS nama_bahan
-    //   FROM tb_transaksi t
-    //     LEFT JOIN tb_produk p
-    //       ON t.id_produk = p.id_produk
-    //     LEFT JOIN tb_bahan b
-    //       ON t.id_produk = b.id_bahan
-    //   ".$query_tgl;
-   $list_transaksi_query = 
+   // $list_transaksi_query = 
+   //    "SELECT *
+   //      FROM
+   //      (SELECT tj.created_at AS tanggal, 'produk' AS type, tj.total_harga, tj.jumlah, 'Penjualan Produk' AS keterangan, p.nama AS nama_produk, '' AS nama_bahan
+   //        FROM tb_transaksi_jual tj
+   //          LEFT JOIN tb_produk p
+   //            ON tj.id_produk = p.id_produk
+   //        $query_tgl_tj
+   //      UNION ALL
+   //      SELECT tb.created_at AS tanggal, 'bahan' AS type, tb.total_harga, tb.jumlah,'Pembelian Bahan' AS keterangan, '' AS nama_produk, tb.nama_bahan
+   //        FROM tb_transaksi_beli tb
+   //        $query_tgl_tb
+   //      ) mutasi
+   //      ORDER BY tanggal ASC";
+    $list_transaksi_query = 
       "SELECT *
         FROM
-        (SELECT tj.created_at AS tanggal, 'produk' AS type, tj.total_harga, tj.jumlah, 'Penjualan Produk' AS keterangan, p.nama AS nama_produk, '' AS nama_bahan
-          FROM tb_transaksi_jual tj
-            LEFT JOIN tb_produk p
-              ON tj.id_produk = p.id_produk
+        (
+          SELECT tb_trx_jual.created_at AS tanggal, 'produk' AS type, tb_trx_jual_detail.total_harga, tb_trx_jual_detail.jumlah, 'Penjualan Produk' AS keterangan, tb_produk.nama AS nama_produk, '' AS nama_bahan
+          FROM tb_transaksi_jual_detail tb_trx_jual_detail
+          INNER JOIN tb_produk
+            ON tb_trx_jual_detail.id_produk = tb_produk.id_produk
+          INNER JOIN tb_transaksi_jual tb_trx_jual
+            ON tb_trx_jual_detail.id_transaksi_jual = tb_trx_jual.id_transaksi_jual
           $query_tgl_tj
         UNION ALL
-        SELECT tb.created_at AS tanggal, 'bahan' AS type, tb.total_harga, tb.jumlah,'Pembelian Bahan' AS keterangan, '' AS nama_produk, tb.nama_bahan
-          FROM tb_transaksi_beli tb
+          SELECT tb_trx_beli.created_at AS tanggal, 'bahan' AS type, tb_trx_beli_detail.total_harga, tb_trx_beli_detail.jumlah, 'Pembelian Bahan' AS keterangan, '' AS nama_produk, tb_bahan.nama AS nama_bahan
+          FROM tb_transaksi_beli_detail tb_trx_beli_detail
+          INNER JOIN tb_bahan
+            ON tb_trx_beli_detail.id_bahan = tb_bahan.id_bahan
+          INNER JOIN tb_transaksi_beli tb_trx_beli
+            ON tb_trx_beli_detail.id_transaksi_beli = tb_trx_beli.id_transaksi_beli
+          INNER JOIN tb_supplier supplier
+            ON tb_trx_beli.id_supplier = supplier.id_supplier
           $query_tgl_tb
         ) mutasi
         ORDER BY tanggal ASC";
-    $list_transaksi_result= mysqli_query($conn, $list_transaksi_query);
+    $list_transaksi_result= mysqli_query($conn, $list_transaksi_query) or die(mysqli_error($conn));
   }
   
 ?>

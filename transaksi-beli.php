@@ -9,6 +9,14 @@
       $time       = time();
       $tanggal    = date('Y-m-d H:i:s');
 
+      $id_supplier          = mysqli_real_escape_string($conn, $_POST['id_supplier']);
+      $data_supplier_query  = "SELECT * FROM tb_supplier WHERE id_supplier = '$id_supplier' LIMIT 1";
+      $data_supplier_result = mysqli_query($conn, $data_supplier_query);
+      $data_supplier        = mysqli_fetch_array($data_supplier_result, MYSQLI_ASSOC);
+
+      $nama_supplier  = $data_supplier['nama'];
+      $alamat_supplier= $data_supplier['alamat'];
+
       $id_bahan_post = mysqli_real_escape_string($conn, $_POST['id_bahan']);
       if($id_bahan_post == 'other'){
         $nama       = mysqli_real_escape_string($conn, $_POST['nama_bahan_input']);
@@ -18,14 +26,6 @@
         $nama_bahan         = mysqli_fetch_array($nama_bahan_result, MYSQLI_ASSOC);
         $nama               = $nama_bahan['nama'];
       }
-
-      $id_supplier          = mysqli_real_escape_string($conn, $_POST['id_supplier']);
-      $data_supplier_query  = "SELECT * FROM tb_supplier WHERE id_supplier = '$id_supplier' LIMIT 1";
-      $data_supplier_result = mysqli_query($conn, $data_supplier_query);
-      $data_supplier        = mysqli_fetch_array($data_supplier_result, MYSQLI_ASSOC);
-
-      $nama_supplier  = $data_supplier['nama'];
-      $alamat_supplier= $data_supplier['alamat'];
 
       $jumlah     = (int) filter_var($_POST['jumlah'], FILTER_SANITIZE_NUMBER_INT);
       $satuan     = mysqli_real_escape_string($conn, $_POST['satuan']);
@@ -137,13 +137,40 @@
               <div class="card-body collapse show" id="collapseExample" style="">
                 <form class="form-horizontal" method="POST" enctype="multipart/form-data">
                   <div class="form-group">
+                    <label class="col-form-label" for="prependedInput">Nama Supplier</label>
+                    <div class="controls">
+                      <div class="input-prepend input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">@</span>
+                        </div>
+                        <select name="id_supplier" required="" class="form-control select2 nama-supplier-select">
+                          <option disabled selected value="">Supplier</option>
+                          <?php
+                            while($supplier = mysqli_fetch_array($list_supplier_result, MYSQLI_ASSOC)){
+                              echo "<option value = \"$supplier[id_supplier]\">$supplier[nama]</option>";
+                              $data_supplier_arr[$supplier['id_supplier']] = $supplier['alamat'];
+                            }
+                          ?>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group alamat-supplier-wrapper" style="display: none">
+                    <label class="col-form-label" for="prependedInput">Alamat Supplier</label>
+                    <div class="controls">
+                      <div class="input-prepend input-group">
+                        <textarea name="alamat_supplier" class="form-control" readonly=""></textarea>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
                     <label class="col-form-label" for="prependedInput">Nama</label>
                     <div class="controls">
                       <div class="input-prepend input-group">
                         <div class="input-group-prepend">
                           <span class="input-group-text">@</span>
                         </div>
-                        <select name="id_bahan" required="" class="form-control select2 nama-bahan-select">
+                        <select name="id_bahan" required="" class="form-control nama-bahan-select">
                           <option disabled selected value="">Bahan</option>
                           <option value="other">Ketik Baru</option>
                           <?php
@@ -200,54 +227,13 @@
                       </div>
                     </div>
                   </div>
-                  <div class="form-group">
-                    <label class="col-form-label" for="prependedInput">Nama Supplier</label>
-                    <div class="controls">
-                      <div class="input-prepend input-group">
-                        <div class="input-group-prepend">
-                          <span class="input-group-text">@</span>
-                        </div>
-                        <select name="id_supplier" required="" class="form-control select2 nama-supplier-select">
-                          <option disabled selected value="">Supplier</option>
-                          <?php
-                            while($supplier = mysqli_fetch_array($list_supplier_result, MYSQLI_ASSOC)){
-                              echo "<option value = \"$supplier[id_supplier]\">$supplier[nama]</option>";
-                              $data_supplier_arr[$supplier['id_supplier']] = $supplier['alamat'];
-                            }
-                          ?>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="form-group alamat-supplier-wrapper" style="display: none">
-                    <label class="col-form-label" for="prependedInput">Alamat Supplier</label>
-                    <div class="controls">
-                      <div class="input-prepend input-group">
-                        <textarea name="alamat_supplier" class="form-control" readonly=""></textarea>
-                      </div>
-                    </div>
-                  </div>
-                  <!--  Data Supplier Diambil Dari DB
-                  <div class="form-group">
-                    <label class="col-form-label" for="prependedInput">Nama Supplier</label>
-                    <div class="controls">
-                      <div class="input-prepend input-group">
-                        <div class="input-group-prepend">
-                          <span class="input-group-text">@</span>
-                        </div>
-                        <input class="form-control" id="prependedInput" size="16" type="text" name="nama_supplier" required="">
-                      </div>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label class="col-form-label" for="prependedInput">Alamat Supplier</label>
-                    <div class="controls">
-                      <div class="input-prepend input-group">
-                        <textarea name="alamat_supplier" class="form-control"></textarea>
-                      </div>
-                    </div>
-                  </div>
-                  -->
+                  <!-- Produk Yg Akan Ditransaksikan -->
+                  <div class="wrap-multiple-transaksi wrap-form-clone">
+                    <!-- Wrapper Form Clone -->
+                  </div><!-- End .wrap-multiple-transaksi -->
+                  <br>
+                  <hr/>
+                  <br/>
                   <div class="form-actions">
                     <button class="btn btn-primary" type="submit">Save changes</button>
                     <button class="btn btn-secondary" type="cancel">Cancel</button>
@@ -262,6 +248,74 @@
   </div>
   <footer class="app-footer">
   </footer>
+  <div style="display: none">
+    <div class="form-clone">
+      <div class="form-group">
+        <label class="col-form-label" for="prependedInput">Nama</label>
+        <div class="controls">
+          <div class="input-prepend input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">@</span>
+            </div>
+            <select name="id_bahan[]" required="" class="form-control nama-bahan-select">
+              <option disabled selected value="">Bahan</option>
+              <option value="other">Ketik Baru</option>
+              <?php
+                while($bahan = mysqli_fetch_array($list_bahan_result, MYSQLI_ASSOC)){
+                  echo "<option value = \"$bahan[id_bahan]\">$bahan[nama]</option>";
+                  $data_satuan_bahan_arr[$bahan['id_bahan']] = $bahan['satuan'];
+                }
+              ?>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="form-group" style="display: none;">
+        <label class="col-form-label" for="prependedInput">Ketikan Nama Bahan</label>
+        <div class="controls">
+          <div class="input-prepend input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">@</span>
+            </div>
+            <input class="form-control nama-bahan-input" id="prependedInput" size="16" type="text" name="nama_bahan_input[]" required="" disabled>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-form-label" for="prependedInput">Jumlah</label>
+        <div class="controls">
+          <div class="input-prepend input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Jml</span>
+            </div>
+            <input class="form-control" id="prependedInput" size="16" type="number" name="jumlah[]"  required="">
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-form-label" for="prependedInput">Satuan</label>
+        <div class="controls">
+          <div class="input-prepend input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Stn</span>
+            </div>
+            <input class="form-control" id="prependedInput" size="16" type="text" name="satuan[]"  required="">
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-form-label" for="prependedInput">Total Harga</label>
+        <div class="controls">
+          <div class="input-prepend input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Rp</span>
+            </div>
+            <input class="form-control" id="prependedInput" onkeyup="FormatCurrency(this)" size="16" type="text" name="total_harga[]" required="">
+          </div>
+        </div>
+      </div>
+    </div><!-- End .form-clone -->
+  </div><!-- display none end -->
   <script type="text/javascript">
     var data_supplier = <?= json_encode($data_supplier_arr); ?>;
     var data_satuan_bahan = <?= json_encode($data_satuan_bahan_arr); ?>;

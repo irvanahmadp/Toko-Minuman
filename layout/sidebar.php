@@ -1,23 +1,46 @@
 <nav class="sidebar-nav">
   <ul class="nav">
     <?php if($_SESSION['level']=='A'){ /* Jika Admin */ ?>
-      <li class="nav-item docs-sidenav-active">
-        <a class="nav-link" href="<?= $base_url; ?>tambah-produk.php">
-          <i class="fas fa-coffee" style="margin-right: 7.5px"></i>
-          Tambah Produk
+      <li class="nav-item nav-dropdown">
+        <a class="nav-link  nav-dropdown-toggle " href="#">
+          <i class="fas fa-list-alt" style="margin-right: 7.5px"></i>
+          Produk
         </a>
+        <ul class="nav-dropdown-items">
+          <li class="nav-item docs-sidenav-active">
+            <a class="nav-link" href="<?= $base_url; ?>produk.php">
+              Transaksi Jual
+            </a>
+          </li>
+          <li class="nav-item docs-sidenav-active">
+            <a class="nav-link" href="<?= $base_url; ?>tambah-produk.php">
+              Tambah Produk
+            </a>
+          </li>
+        </ul>
       </li>
-      <li class="nav-item docs-sidenav-active">
-        <a class="nav-link" href="<?= $base_url; ?>produk.php">
-          <i class="fas fa-shopping-cart" style="margin-right: 7.5px"></i>
-          Transaksi Jual
+      <li class="nav-item nav-dropdown">
+        <a class="nav-link  nav-dropdown-toggle " href="#">
+          <i class="fas fa-list-alt" style="margin-right: 7.5px"></i>
+          Bahan
         </a>
-      </li>
-      <li class="nav-item docs-sidenav-active">
-        <a class="nav-link" href="<?= $base_url; ?>transaksi-beli.php">
-          <i class="fas fa-shopping-cart" style="margin-right: 7.5px"></i>
-          Transaksi Beli
-        </a>
+        <ul class="nav-dropdown-items">
+          <li class="nav-item docs-sidenav-active">
+            <a class="nav-link" href="<?= $base_url; ?>bahan.php">
+              Daftar Bahan
+            </a>
+          </li>
+          <li class="nav-item docs-sidenav-active">
+            <a class="nav-link" href="<?= $base_url; ?>daftar-pengurangan-stok-bahan.php">
+              Penggunaan Bahan
+            </a>
+          </li>
+          <li class="nav-item docs-sidenav-active">
+            <a class="nav-link" href="<?= $base_url; ?>transaksi-beli.php">
+              Tambah Bahan
+            </a>
+          </li>
+        </ul>
       </li>
       <li class="nav-item docs-sidenav-active">
         <a class="nav-link" href="<?= $base_url; ?>supplier.php">

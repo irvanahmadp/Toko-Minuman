@@ -8,7 +8,7 @@
 
     $id_bahan    = mysqli_real_escape_string($conn, $_GET['id_bahan']);
 
-    $bahan_query = "SELECT nama FROM tb_bahan WHERE id_bahan='$id_bahan'";
+    $bahan_query = "SELECT nama, satuan FROM tb_bahan WHERE id_bahan='$id_bahan'";
     $bahan_result= mysqli_query($conn, $bahan_query);
     $result_arr   = mysqli_fetch_array($bahan_result);
 
@@ -17,6 +17,11 @@
 
       $tanggal    = date('Y-m-d H:i:s');
       $stok       = (int) filter_var($_POST['stok'], FILTER_SANITIZE_NUMBER_INT);
+
+      $history_pengurangan_stok_query =
+        "INSERT INTO tb_penggunaan_bahan (created_at, id_bahan, jumlah, satuan)
+          VALUES ('$tanggal', '$id_bahan', '$stok', '$result_arr[satuan]')";
+      $history_pengurangan_stok_result = mysqli_query($conn, $history_pengurangan_stok_query) or die(mysqli_error());
 
       $kurangi_stok_query = 
         "UPDATE tb_bahan
