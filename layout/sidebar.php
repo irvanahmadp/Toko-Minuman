@@ -9,12 +9,17 @@
         <ul class="nav-dropdown-items">
           <li class="nav-item docs-sidenav-active">
             <a class="nav-link" href="<?= $base_url; ?>produk.php">
-              Transaksi Jual
+              Daftar Produk
             </a>
           </li>
           <li class="nav-item docs-sidenav-active">
             <a class="nav-link" href="<?= $base_url; ?>tambah-produk.php">
               Tambah Produk
+            </a>
+          </li>
+          <li class="nav-item docs-sidenav-active">
+            <a class="nav-link" href="<?= $base_url; ?>transaksi.php">
+              Transaksi Jual
             </a>
           </li>
         </ul>

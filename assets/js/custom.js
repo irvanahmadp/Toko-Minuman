@@ -30,14 +30,18 @@ $(document).ready(function(){
     if($(this).val() == 'other'){
       wrap_el.find(".nama-bahan-input").parents(".form-group").show();
       wrap_el.find(".nama-bahan-input").prop("disabled", false);
-      wrap_el.find("input[name=satuan]").val('');
-      wrap_el.find("input[name=satuan]").prop('readonly', false);
+      wrap_el.find("input[name='satuan[]']").val('');
+      wrap_el.find("input[name='satuan[]']").prop('readonly', false);
     }else{
       wrap_el.find(".nama-bahan-input").parents(".form-group").hide();
       wrap_el.find(".nama-bahan-input").prop("disabled", true);
-      wrap_el.find("input[name=satuan]").val(data_satuan_bahan[$(this).val()]);
-      wrap_el.find("input[name=satuan]").prop('readonly', true);
+      wrap_el.find("input[name='satuan[]']").val(data_satuan_bahan[$(this).val()]);
+      wrap_el.find("input[name='satuan[]']").prop('readonly', true);
     }
+  });
+  $(".nama-produk-select").on('change', function(){
+    var wrap_el = $(this).parents(".wrap-element-produk");
+    wrap_el.find("input[name='harga_jual[]']").val(data_harga_produk[$(this).val()]);
   });
   $(".js-jumlah-produk").keyup(function(e){
     var harga_temp   = HapusTitik($("input[name=harga_jual]").val());
@@ -47,6 +51,16 @@ $(document).ready(function(){
     var total_hrg    = TambahTitik(total_hrg_int);
     if(!isNaN(total_hrg)){
       $("input[name=total_harga]").val(total_hrg);
+    }
+  });
+  $(".js-jumlah-produk2").keyup(function(e){
+    var harga_temp   = HapusTitik($("input[name='harga_jual[]']").val());
+    var harga        = parseInt(harga_temp);
+    var jumlah       = parseInt($(".js-jumlah-produk").val());
+    var total_hrg_int= harga * jumlah;
+    var total_hrg    = TambahTitik(total_hrg_int);
+    if(!isNaN(total_hrg)){
+      $("input[name='total_harga[]']").val(total_hrg);
     }
   });
   $("input[name=sesuai_alamat_pendaftaran]").change(function(){
