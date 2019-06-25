@@ -163,70 +163,72 @@
                       </div>
                     </div>
                   </div>
-                  <div class="form-group">
-                    <label class="col-form-label" for="prependedInput">Nama</label>
-                    <div class="controls">
-                      <div class="input-prepend input-group">
-                        <div class="input-group-prepend">
-                          <span class="input-group-text">@</span>
+                  <div class="wrap-element-bahan">
+                    <div class="form-group">
+                      <label class="col-form-label" for="prependedInput">Nama</label>
+                      <div class="controls">
+                        <div class="input-prepend input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text">@</span>
+                          </div>
+                          <select name="id_bahan" required="" class="form-control nama-bahan-select">
+                            <option disabled selected value="">Bahan</option>
+                            <option value="other">Ketik Baru</option>
+                            <?php
+                              while($bahan = mysqli_fetch_array($list_bahan_result, MYSQLI_ASSOC)){
+                                echo "<option value = \"$bahan[id_bahan]\">$bahan[nama]</option>";
+                                $data_satuan_bahan_arr[$bahan['id_bahan']] = $bahan['satuan'];
+                              }
+                            ?>
+                          </select>
                         </div>
-                        <select name="id_bahan" required="" class="form-control nama-bahan-select">
-                          <option disabled selected value="">Bahan</option>
-                          <option value="other">Ketik Baru</option>
-                          <?php
-                            while($bahan = mysqli_fetch_array($list_bahan_result, MYSQLI_ASSOC)){
-                              echo "<option value = \"$bahan[id_bahan]\">$bahan[nama]</option>";
-                              $data_satuan_bahan_arr[$bahan['id_bahan']] = $bahan['satuan'];
-                            }
-                          ?>
-                        </select>
                       </div>
                     </div>
-                  </div>
-                  <div class="form-group" style="display: none;">
-                    <label class="col-form-label" for="prependedInput">Ketikan Nama Bahan</label>
-                    <div class="controls">
-                      <div class="input-prepend input-group">
-                        <div class="input-group-prepend">
-                          <span class="input-group-text">@</span>
+                    <div class="form-group" style="display: none;">
+                      <label class="col-form-label" for="prependedInput">Ketikan Nama Bahan</label>
+                      <div class="controls">
+                        <div class="input-prepend input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text">@</span>
+                          </div>
+                          <input class="form-control nama-bahan-input" id="prependedInput" size="16" type="text" name="nama_bahan_input" required="" disabled>
                         </div>
-                        <input class="form-control nama-bahan-input" id="prependedInput" size="16" type="text" name="nama_bahan_input" required="" disabled>
                       </div>
                     </div>
-                  </div>
-                  <div class="form-group">
-                    <label class="col-form-label" for="prependedInput">Jumlah</label>
-                    <div class="controls">
-                      <div class="input-prepend input-group">
-                        <div class="input-group-prepend">
-                          <span class="input-group-text">Jml</span>
+                    <div class="form-group">
+                      <label class="col-form-label" for="prependedInput">Jumlah</label>
+                      <div class="controls">
+                        <div class="input-prepend input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text">Jml</span>
+                          </div>
+                          <input class="form-control" id="prependedInput" size="16" type="number" name="jumlah"  required="">
                         </div>
-                        <input class="form-control" id="prependedInput" size="16" type="number" name="jumlah"  required="">
                       </div>
                     </div>
-                  </div>
-                  <div class="form-group">
-                    <label class="col-form-label" for="prependedInput">Satuan</label>
-                    <div class="controls">
-                      <div class="input-prepend input-group">
-                        <div class="input-group-prepend">
-                          <span class="input-group-text">Stn</span>
+                    <div class="form-group">
+                      <label class="col-form-label" for="prependedInput">Satuan</label>
+                      <div class="controls">
+                        <div class="input-prepend input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text">Stn</span>
+                          </div>
+                          <input class="form-control" id="prependedInput" size="16" type="text" name="satuan"  required="">
                         </div>
-                        <input class="form-control" id="prependedInput" size="16" type="text" name="satuan"  required="">
                       </div>
                     </div>
-                  </div>
-                  <div class="form-group">
-                    <label class="col-form-label" for="prependedInput">Total Harga</label>
-                    <div class="controls">
-                      <div class="input-prepend input-group">
-                        <div class="input-group-prepend">
-                          <span class="input-group-text">Rp</span>
+                    <div class="form-group">
+                      <label class="col-form-label" for="prependedInput">Total Harga</label>
+                      <div class="controls">
+                        <div class="input-prepend input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text">Rp</span>
+                          </div>
+                          <input class="form-control" id="prependedInput" onkeyup="FormatCurrency(this)" size="16" type="text" name="total_harga" required="">
                         </div>
-                        <input class="form-control" id="prependedInput" onkeyup="FormatCurrency(this)" size="16" type="text" name="total_harga" required="">
                       </div>
                     </div>
-                  </div>
+                  </div><!-- End .wrap-element-bahan -->
                   <!-- Produk Yg Akan Ditransaksikan -->
                   <div class="wrap-multiple-transaksi wrap-form-clone">
                     <!-- Wrapper Form Clone -->
