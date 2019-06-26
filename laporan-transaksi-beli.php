@@ -23,12 +23,20 @@
     $query_tgl    = "";
   }
 
+  // $list_bahan_query = 
+  //   "SELECT tb_transaksi_beli_detail.*, tb_transaksi_beli.created_at, tb_bahan.nama AS nama_bahan, supplier.nama AS nama_supplier, supplier.alamat AS alamat_supplier FROM tb_transaksi_beli_detail
+  //   INNER JOIN tb_bahan
+  //     ON tb_transaksi_beli_detail.id_bahan = tb_bahan.id_bahan
+  //   INNER JOIN tb_transaksi_beli
+  //     ON tb_transaksi_beli_detail.id_transaksi_beli = tb_transaksi_beli.id_transaksi_beli
+  //   INNER JOIN tb_supplier supplier
+  //     ON tb_transaksi_beli.id_supplier = supplier.id_supplier ".
+  //   $query_tgl;
+  // $list_bahan_result= mysqli_query($conn, $list_bahan_query);
+
   $list_bahan_query = 
-    "SELECT tb_transaksi_beli_detail.*, tb_transaksi_beli.created_at, tb_bahan.nama AS nama_bahan, supplier.nama AS nama_supplier, supplier.alamat AS alamat_supplier FROM tb_transaksi_beli_detail
-    INNER JOIN tb_bahan
-      ON tb_transaksi_beli_detail.id_bahan = tb_bahan.id_bahan
-    INNER JOIN tb_transaksi_beli
-      ON tb_transaksi_beli_detail.id_transaksi_beli = tb_transaksi_beli.id_transaksi_beli
+    "SELECT tb_transaksi_beli.*, supplier.nama AS nama_supplier, supplier.alamat AS alamat_supplier 
+    FROM tb_transaksi_beli
     INNER JOIN tb_supplier supplier
       ON tb_transaksi_beli.id_supplier = supplier.id_supplier ".
     $query_tgl;
@@ -37,7 +45,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Laporan Transaksi Beli</title>
+  <title>Detail Transaksi Beli</title>
   <?php include 'layout/head.php'; ?>
 </head>
 <body class="app header-fixed sidebar-md-show sidebar-fixed">
@@ -52,7 +60,7 @@
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
           <li class="breadcrumb-item "><a href="<?= $base_url; ?>">Home</a></li>
-          <li class="breadcrumb-item active">Bahan</li>
+          <li class="breadcrumb-item active">Laporan Transaksi</li>
         </ol>
       </nav>
       <div class="container-fluid">
@@ -60,7 +68,7 @@
           <div class="col-lg-12 col-xl-12 ">
             <div class="card">
               <div class="card-header">
-                <i class="fa fa-align-justify"></i> Daftar Pembelian Bahan</div>
+                <i class="fa fa-align-justify"></i> Laporan Transaksi Pembelian Bahan</div>
               <div class="card-body">
                 <form style="margin-bottom: 25px" method="POST">
                   <div class="form-row">
@@ -81,12 +89,13 @@
                       <tr>
                         <th>No</th>
                         <th>Tanggal</th>
-                        <th>Nama Bahan</th>
-                        <th>Nama Supplier</th>
+                        <!-- <th>Nama Bahan</th> -->
+                        <th>Supplier</th>
                         <th>Alamat Supplier</th>
-                        <th>Harga</th>
-                        <th>Jumlah</th>
+                        <!-- <th>Harga</th>
+                        <th>Jumlah</th> -->
                         <th>Total Harga</th>
+                        <th style="text-align: center;">Aksi</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -96,12 +105,14 @@
                           <tr>
                           <td><?= $no ?></td>
                           <td><?= $bahan['created_at']; ?> </td>
-                          <td><?= $bahan['nama_bahan']; ?> </td>
                           <td><?= $bahan['nama_supplier']; ?></td>
                           <td><?= $bahan['alamat_supplier']; ?></td>
-                          <td><?= number_format($bahan['harga'], 0, '', '.'); ?></td>
-                          <td><?= $bahan['jumlah'].' '.$bahan['satuan']; ?> </td>
                           <td><?= number_format($bahan['total_harga'], 0, '', '.'); ?></td>
+                          <td style="text-align: center;">
+                            <a href="<?= $base_url.'detail-laporan-transaksi-beli.php?id_transaksi='.$bahan['id_transaksi_beli']; ?>" class="btn btn-primary">
+                              Detail Transaksi
+                            </a>
+                          </td>
                           </tr>
                           
                       <?php 

@@ -57,7 +57,6 @@
                           <th>No</th>
                           <th>Bahan</th>
                           <th>Stok</th>
-                          <th width="75px">Aksi</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -68,12 +67,6 @@
                             <td><?= $no ?></td>
                             <td><?= $bahan['nama']; ?> </td>
                             <td><?= $bahan['stok'].' '.$bahan['satuan']; ?> </td>
-                            <td>
-                              <a class="btn btn-success btn-block"
-                                href="<?= $base_url; ?>kurangi-stok-bahan.php?id_bahan=<?= $bahan['id_bahan']; ?>">
-                                Kurangi Stok
-                              </a>
-                            </td>
                             </tr>                            
                         <?php 
                             $no++; 

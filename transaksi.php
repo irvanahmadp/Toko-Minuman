@@ -118,7 +118,7 @@
                       <?php if(isset($_GET['jumlah_transaksi'])){
                         $jumlah_transaksi = $_GET['jumlah_transaksi'];
                       }else{
-                        $jumlah_transaksi = 0;
+                        $jumlah_transaksi = 1;
                       } ?>             
                       <input class="form-control" id="prependedInput" size="16" type="number" name="jumlah_transaksi"  required="" placeholder="Jumlah Transaksi Bahan" value="<?= $jumlah_transaksi; ?>">
                     </div>
@@ -236,7 +236,7 @@
                           </div>
                         </div>
                       </div>
-                      <!-- <div class="form-group">
+                      <div class="form-group">
                         <label class="col-form-label" for="prependedInput">Total Harga</label>
                         <div class="controls">
                           <div class="input-prepend input-group">
@@ -247,7 +247,7 @@
                               class="form-control" id="prependedInput" onkeyup="FormatCurrency(this)" size="16" type="text" name="total_harga[]" readonly=""/>
                           </div>
                         </div>
-                      </div> -->
+                      </div>
                     </div><!-- End .wrap-element-produk -->
                   <?php } ?>
                   <div class="form-actions">

@@ -64,11 +64,18 @@
                             <td><?= $bahan['nama']; ?> </td>
                             <td><?= $bahan['jumlah'].' '.$bahan['satuan']; ?> </td>
                             </tr>                            
-                        <?php 
+                        <?php
                             $no++; 
                           } 
                         ?>
                       </tbody>
+                      <tfoot>
+                        <tr>
+                          <th colspan="6">Total:</th>
+                          <th><?= number_format($total_jumlah, 0, '', '.'); ?></th>
+                          <th>Rp. <?= number_format($total_harga_semua, 0, '', '.'); ?></th>
+                        </tr>
+                      </tfoot>
                     </table>
                   </div>
                 </div>

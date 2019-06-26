@@ -54,13 +54,14 @@ $(document).ready(function(){
     }
   });
   $(".js-jumlah-produk2").keyup(function(e){
-    var harga_temp   = HapusTitik($("input[name='harga_jual[]']").val());
+    var wrap_el = $(this).parents(".wrap-element-produk");
+    var harga_temp   = HapusTitik(wrap_el.find("input[name='harga_jual[]']").val());
     var harga        = parseInt(harga_temp);
-    var jumlah       = parseInt($(".js-jumlah-produk").val());
+    var jumlah       = parseInt(wrap_el.find(".js-jumlah-produk2").val());
     var total_hrg_int= harga * jumlah;
     var total_hrg    = TambahTitik(total_hrg_int);
     if(!isNaN(total_hrg)){
-      $("input[name='total_harga[]']").val(total_hrg);
+      wrap_el.find("input[name='total_harga[]']").val(total_hrg);
     }
   });
   $("input[name=sesuai_alamat_pendaftaran]").change(function(){

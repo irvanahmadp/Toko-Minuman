@@ -83,20 +83,26 @@
           Beli Minuman
         </a>
       </li>
-    <!-- Semua Member -->
-    <li class="nav-item nav-dropdown">
-      <a class="nav-link  nav-dropdown-toggle " href="#">
-        <i class="fas fa-list-alt" style="margin-right: 7.5px"></i>
-        Laporan
-      </a>
-      <ul class="nav-dropdown-items">
-        <li class="nav-item active docs-sidenav-active">
-          <a class="nav-link" href="<?= $base_url; ?>laporan-transaksi.php">
-            Transaksi
-          </a>
-        </li>
-      </ul>
-    </li>
+      <li class="nav-item docs-sidenav-active">
+        <a class="nav-link" href="<?= $base_url; ?>transaksi.php">
+          <i class="fas fa-coffee" style="margin-right: 7.5px"></i>
+          Transaksi Beli
+        </a>
+      </li>
+      <!-- Semua Member -->
+      <li class="nav-item nav-dropdown">
+        <a class="nav-link  nav-dropdown-toggle " href="#">
+          <i class="fas fa-list-alt" style="margin-right: 7.5px"></i>
+          Laporan
+        </a>
+        <ul class="nav-dropdown-items">
+          <li class="nav-item active docs-sidenav-active">
+            <a class="nav-link" href="<?= $base_url; ?>laporan-transaksi.php">
+              Transaksi
+            </a>
+          </li>
+        </ul>
+      </li>
     <?php } ?>
   </ul>
 </nav>

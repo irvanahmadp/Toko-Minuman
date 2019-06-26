@@ -84,11 +84,6 @@
       header( "Refresh:3; url=".$base_url."laporan-transaksi-beli.php", true, 303);
     }
 
-    /* List Semua Bahan */
-    $list_bahan_query       = "SELECT id_bahan, nama, satuan FROM tb_bahan";
-    $list_bahan_result      = mysqli_query($conn, $list_bahan_query);
-    $data_satuan_bahan_arr  = array();
-
     /* List Semua Supplier */
     $list_supplier_query    = "SELECT * FROM tb_supplier";
     $list_supplier_result   = mysqli_query($conn, $list_supplier_query);
@@ -152,7 +147,7 @@
                       <?php if(isset($_GET['jumlah_transaksi'])){
                         $jumlah_transaksi = $_GET['jumlah_transaksi'];
                       }else{
-                        $jumlah_transaksi = 0;
+                        $jumlah_transaksi = 1;
                       } ?>             
                       <input class="form-control" id="prependedInput" size="16" type="number" name="jumlah_transaksi"  required="" placeholder="Jumlah Transaksi Bahan" value="<?= $jumlah_transaksi; ?>">
                     </div>
@@ -202,10 +197,14 @@
                             <div class="input-group-prepend">
                               <span class="input-group-text">@</span>
                             </div>
-                            <select name="id_bahan_<?= $i; ?>" required="" class="form-control nama-bahan-select">
+                            <select name="id_bahan_<?= $i; ?>" required="" class="form-control select2 nama-bahan-select">
                               <option disabled selected value="">Bahan</option>
                               <option value="other">Ketik Baru</option>
                               <?php
+                                   /* List Semua Bahan */
+                                $list_bahan_query       = "SELECT id_bahan, nama, satuan FROM tb_bahan";
+                                $list_bahan_result      = mysqli_query($conn, $list_bahan_query);
+                                $data_satuan_bahan_arr  = array();
                                 while($bahan = mysqli_fetch_array($list_bahan_result, MYSQLI_ASSOC)){
                                   echo "<option value = \"$bahan[id_bahan]\">$bahan[nama]</option>";
                                   $data_satuan_bahan_arr[$bahan['id_bahan']] = $bahan['satuan'];

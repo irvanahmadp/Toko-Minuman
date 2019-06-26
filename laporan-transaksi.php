@@ -22,42 +22,25 @@
   if(strtoupper($_SESSION['level']) == 'A'){  
     /* Jika Yang Login Admin */
     // $list_transaksi_query = 
-    //   "SELECT t.tanggal, t.credit, t.jumlah, t.nama as nama_pembeli, t.alamat as alamat_pembeli, p.nama as minuman
-    //   FROM tb_transaksi t
-    //     INNER JOIN tb_produk p
-    //       ON t.id_produk = p.id_produk
-    //   WHERE type = 'produk'".$query_tgl;
+    //   "SELECT tb_transaksi_jual_detail.*, tb_transaksi_jual.created_at, tb_produk.nama AS nama_produk, tb_transaksi_jual.nama AS nama_pembeli, tb_transaksi_jual.alamat AS alamat_pembeli
+    //   FROM tb_transaksi_jual_detail
+    //   INNER JOIN tb_produk
+    //     ON tb_transaksi_jual_detail.id_produk = tb_produk.id_produk
+    //   INNER JOIN tb_transaksi_jual
+    //     ON tb_transaksi_jual_detail.id_transaksi_jual = tb_transaksi_jual.id_transaksi_jual ".
+    //   $query_tgl;
+    //   $list_transaksi_result= mysqli_query($conn, $list_transaksi_query);
+
     $list_transaksi_query = 
-      "SELECT tb_transaksi_jual_detail.*, tb_transaksi_jual.created_at, tb_produk.nama AS nama_produk, tb_transaksi_jual.nama AS nama_pembeli, tb_transaksi_jual.alamat AS alamat_pembeli
-      FROM tb_transaksi_jual_detail
-      INNER JOIN tb_produk
-        ON tb_transaksi_jual_detail.id_produk = tb_produk.id_produk
-      INNER JOIN tb_transaksi_jual
-        ON tb_transaksi_jual_detail.id_transaksi_jual = tb_transaksi_jual.id_transaksi_jual ".
+      "SELECT *
+      FROM tb_transaksi_jual ".
       $query_tgl;
       $list_transaksi_result= mysqli_query($conn, $list_transaksi_query);
   }else{
     /* Jika Yang Login Bukan Admin */
-    // $list_transaksi_query = 
-    //   "SELECT t.tanggal, t.credit, t.jumlah, t.nama as nama_pembeli, t.alamat as alamat_pembeli, p.nama as minuman
-    //   FROM tb_transaksi t
-    //     INNER JOIN tb_produk p
-    //       ON t.id_produk = p.id_produk
-    //   WHERE type = 'produk'
-    //     AND id_user = '$_SESSION[id_user]'".$query_tgl;
-    // $list_transaksi_query = 
-    //   "SELECT t.created_at, t.harga, t.jumlah, t.total_harga, t.nama as nama_pembeli, t.alamat as alamat_pembeli, p.nama as minuman
-    //   FROM tb_transaksi_jual t
-    //     INNER JOIN tb_produk p
-    //       ON t.id_produk = p.id_produk
-    //   WHERE id_user = '$_SESSION[id_user]'".$query_tgl;
     $list_transaksi_query =
-      "SELECT tb_transaksi_jual_detail.*, tb_transaksi_jual.created_at, tb_produk.nama AS nama_produk, tb_transaksi_jual.nama AS nama_pembeli, tb_transaksi_jual.alamat AS alamat_pembeli
-      FROM tb_transaksi_jual_detail
-      INNER JOIN tb_produk
-        ON tb_transaksi_jual_detail.id_produk = tb_produk.id_produk
-      INNER JOIN tb_transaksi_jual
-        ON tb_transaksi_jual_detail.id_transaksi_jual = tb_transaksi_jual.id_transaksi_jual 
+      "SELECT *
+      FROM tb_transaksi_jual 
       WHERE tb_transaksi_jual.id_user = '$_SESSION[id_user]' ".
       $query_tgl;
     $list_transaksi_result= mysqli_query($conn, $list_transaksi_query);
@@ -113,14 +96,15 @@
                         <tr>
                           <th>No</th>
                           <th>Tanggal</th>
-                          <th>Minuman</th>
+                          <!-- <th>Minuman</th>
                           <th>Harga</th>
-                          <th>Jumlah</th>
-                          <th>Total Harga</th>
+                          <th>Jumlah</th> -->
                           <?php if(strtoupper($_SESSION['level']) == 'A') { ?>
                             <th>Nama Pembeli</th>
                           <?php } ?>
                           <th>Alamat</th>
+                          <th>Total Harga</th>
+                          <th style="text-align: center;">Aksi</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -130,18 +114,18 @@
                             <tr>
                             <td><?= $no; ?></td>
                             <td><?= $transaksi['created_at']; ?></td>
-                            <td><?= $transaksi['nama_produk']; ?></td>
-                            <td>
-                              Rp. <?= number_format($transaksi['harga'], 0, '', '.'); ?>
-                            </td>
-                            <td><?= $transaksi['jumlah']; ?></td>
+                            <?php if(strtoupper($_SESSION['level']) == 'A') { ?>
+                              <td><?= $transaksi['nama']; ?></td>
+                            <?php } ?>
+                            <td><?= $transaksi['alamat']; ?></td>
                             <td>
                               Rp. <?= number_format($transaksi['total_harga'], 0, '', '.'); ?>
                             </td>
-                            <?php if(strtoupper($_SESSION['level']) == 'A') { ?>
-                              <td><?= $transaksi['nama_pembeli']; ?></td>
-                            <?php } ?>
-                            <td><?= $transaksi['alamat_pembeli']; ?></td>
+                            <td style="text-align: center;">
+                              <a href="<?= $base_url.'detail-laporan-transaksi-jual.php?id_transaksi='.$transaksi['id_transaksi_jual']; ?>" class="btn btn-primary">
+                                Detail Transaksi
+                              </a>
+                            </td>
                             </tr>
                             
                         <?php 
