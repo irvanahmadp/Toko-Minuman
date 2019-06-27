@@ -13,8 +13,6 @@
     $result_arr   = mysqli_fetch_array($produk_result);
 
     if($_SERVER['REQUEST_METHOD'] == "POST"){
-      $harga = (int) filter_var($_POST['harga'], FILTER_SANITIZE_NUMBER_INT);
-
       $tanggal    = date('Y-m-d H:i:s');
       $stok       = (int) filter_var($_POST['stok'], FILTER_SANITIZE_NUMBER_INT);
 
@@ -26,7 +24,42 @@
           LIMIT 1;    
           ";
       $tambah_stok_result = mysqli_query($conn, $tambah_stok_query) or die(mysqli_error());
-      header("Location:".$base_url.'produk.php');
+
+
+      $produk_bahan_query = 
+      "SELECT * FROM tb_bahan_produk WHERE id_produk = '$id_produk'";
+      $produk_bahan_result = mysqli_query($conn, $produk_bahan_query);
+      while($produk_bahan_arr = mysqli_fetch_array($produk_bahan_result, MYSQLI_ASSOC)){
+        $id_bahan = $produk_bahan_arr['id_bahan'];
+        $jumlah_bahan_satuan_produk = $produk_bahan_arr['jumlah'];
+        $jumlah_bahan = $jumlah_bahan_satuan_produk * $stok;
+        $id_bahan_produk = $produk_bahan_arr['id_bahan_produk'];
+
+        // $tambah_bahan_produk_query = 
+        //   "INSERT INTO tb_bahan_produk (created_at, jumlah, id_produk, id_bahan)
+        //     VALUES ('$tanggal', '$jumlah_bahan_satuan_produk', '$id_produk', $id_bahan)";
+        // $tambah_bahan_produk_result = mysqli_query($conn, $tambah_bahan_produk_query);
+        // $id_bahan_produk = mysqli_insert_id($conn);
+
+        $data_satuan_bahan_query = "
+          SELECT satuan FROM tb_bahan WHERE id_bahan = '$id_bahan';
+        ";
+        $data_satuan_bahan_result = mysqli_query($conn, $data_satuan_bahan_query);
+        $data_satuan_bahan_arr    = mysqli_fetch_array($data_satuan_bahan_result, MYSQLI_ASSOC);
+        $satuan                   = $data_satuan_bahan_arr['satuan'];
+
+        $penggunaan_bahan_query =
+          "INSERT INTO tb_penggunaan_bahan (created_at, id_bahan, id_bahan_produk, jumlah, satuan, keterangan)
+            VALUES ('$tanggal', '$id_bahan', '$id_bahan_produk', '$jumlah_bahan', '$satuan', 'Untuk $result_arr[nama]')
+          ";
+        $penggunaan_bahan_result = mysqli_query($conn, $penggunaan_bahan_query);
+
+        $update_stok_bahan_query = 
+          "UPDATE tb_bahan SET stok = stok - $jumlah_bahan WHERE id_bahan = '$id_bahan' LIMIT 1";
+        $update_stok_bahan_result = mysqli_query($conn, $update_stok_bahan_query);
+      }
+
+      //header("Location:".$base_url.'produk.php');
     }
   }
 ?>

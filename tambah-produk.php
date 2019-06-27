@@ -49,10 +49,49 @@
       $tambah_produk_result = mysqli_query($conn, $tambah_produk_query) or die(mysqli_error($conn));
       $id_produk = mysqli_insert_id($conn);
 
+      foreach ($_POST['id_bahan'] as $index => $value) {
+        /* Bahan Produk */
+        $id_bahan = $_POST['id_bahan'][$index];
+        $jumlah_bahan = $_POST['jumlah_bahan'][$index];
+        $jumlah_bahan_satuan_produk = $jumlah_bahan / $stok;
+        $tambah_bahan_produk_query = 
+          "INSERT INTO tb_bahan_produk (created_at, jumlah, id_produk, id_bahan)
+            VALUES ('$tanggal', '$jumlah_bahan_satuan_produk', '$id_produk', $id_bahan)";
+        $tambah_bahan_produk_result = mysqli_query($conn, $tambah_bahan_produk_query);
+        $id_bahan_produk = mysqli_insert_id($conn);
+
+        $data_satuan_bahan_query = "
+          SELECT satuan FROM tb_bahan WHERE id_bahan = '$id_bahan';
+        ";
+        $data_satuan_bahan_result = mysqli_query($conn, $data_satuan_bahan_query);
+        $data_satuan_bahan_arr    = mysqli_fetch_array($data_satuan_bahan_result, MYSQLI_ASSOC);
+        $satuan                   = $data_satuan_bahan_arr['satuan'];
+
+        $penggunaan_bahan_query =
+          "INSERT INTO tb_penggunaan_bahan (created_at, id_bahan, id_bahan_produk, jumlah, satuan, keterangan)
+            VALUES ('$tanggal', '$id_bahan', '$id_bahan_produk', '$jumlah_bahan', '$satuan', 'Untuk $nama')
+          ";
+        $penggunaan_bahan_result = mysqli_query($conn, $penggunaan_bahan_query);
+
+        $update_stok_bahan_query = 
+          "UPDATE tb_bahan SET stok = stok - $jumlah_bahan WHERE id_bahan = '$id_bahan' LIMIT 1";
+        $update_stok_bahan_result = mysqli_query($conn, $update_stok_bahan_query);
+      }
+
       $add_produk_msg = "Produk berhasil ditambahkan";
-      header( "Refresh:3; url=".$base_url."produk.php", true, 303);
+      //header( "Refresh:3; url=".$base_url."produk.php", true, 303);
     }
   }
+
+  $list_bahan_query =
+   "SELECT * FROM tb_bahan";
+  $list_bahan_result = mysqli_query($conn, $list_bahan_query);
+  while ($bahan = mysqli_fetch_array($list_bahan_result, MYSQLI_ASSOC)){
+    $list_bahan_arr[$bahan['id_bahan']]    = $bahan['nama'];
+  }
+
+  $list_bahan_json = json_encode($list_bahan_arr);
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -148,6 +187,23 @@
                       </div>
                     </div>
                   </div>
+                  <div class="wrap-element-bahan-produk" style="margin-bottom: 25px">
+                    <div class="form-row">
+                      <div class="col-3">
+                        <select class="form-control select2 list-bahan" name="id_bahan[]">
+                          <option selected="" disabled="" value="">Bahan</option>
+                        </select>
+                      </div>
+                      <div class="col-2">
+                        <input type="number" step="any" class="form-control" placeholder="Jumlah" name="jumlah_bahan[]" required="">
+                      </div>
+                      <div class="col-1">
+                        <button class="btn btn-primary add-bahan-produk">
+                          <i class="fas fa-plus"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                   <div class="form-actions">
                     <button class="btn btn-primary" type="submit">Save changes</button>
                     <button class="btn btn-secondary" type="cancel">Cancel</button>
@@ -162,6 +218,9 @@
   </div>
   <footer class="app-footer">
   </footer>
+  <script type="text/javascript">
+    var list_bahan_json = <?= $list_bahan_json; ?>
+  </script>
   <?php include 'layout/bottom.php'; ?>
   </body>
 </html>

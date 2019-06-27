@@ -52,6 +52,7 @@
                           <th>Tanggal</th>
                           <th>Bahan</th>
                           <th>Jumlah</th>
+                          <th>Keterangan</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -63,19 +64,13 @@
                             <td><?= $bahan['created_at']; ?> </td>
                             <td><?= $bahan['nama']; ?> </td>
                             <td><?= $bahan['jumlah'].' '.$bahan['satuan']; ?> </td>
+                            <td><?= $bahan['keterangan']; ?> </td>
                             </tr>                            
                         <?php
                             $no++; 
                           } 
                         ?>
                       </tbody>
-                      <tfoot>
-                        <tr>
-                          <th colspan="6">Total:</th>
-                          <th><?= number_format($total_jumlah, 0, '', '.'); ?></th>
-                          <th>Rp. <?= number_format($total_harga_semua, 0, '', '.'); ?></th>
-                        </tr>
-                      </tfoot>
                     </table>
                   </div>
                 </div>

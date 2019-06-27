@@ -25,6 +25,9 @@ $(document).ready(function(){
       $(".alamat-supplier-wrapper").hide();
     }
   });
+  if($(".wrap-element-bahan-produk").length > 0){
+    tambah_list_bahan_pada_produk($(".wrap-element-bahan-produk").find("select"));
+  }
   $(".nama-bahan-select").on('change', function(){
     var wrap_el = $(this).parents(".wrap-element-bahan");
     if($(this).val() == 'other'){
@@ -80,6 +83,26 @@ $(document).ready(function(){
     e.preventDefault();
     window.history.back();
   });
+  $(".add-bahan-produk").click(function(e){
+    e.preventDefault();
+    var el_html_add =
+      '<div class="form-row" style="margin-bottom:15px">'
+        +'<div class="col-3">'
+          +'<select class="form-control select2 list-bahan" name="id_bahan[]">'
+            +'<option selected="" disabled="" value="">Bahan</option>'
+          +'</select>'
+        +'</div>'
+        +'<div class="col-2">'
+          +'<input type="number" step="any" class="form-control" placeholder="Jumlah" name="jumlah_bahan[]" required="">'
+        +'</div>'
+        +'<div class="col-1">'
+      +'</div>';
+    $(".wrap-element-bahan-produk").prepend(el_html_add);
+    tambah_list_bahan_pada_produk($(".wrap-element-bahan-produk select:first"));
+    $(".wrap-element-bahan-produk select:first").select2({
+      theme: 'bootstrap'
+    });
+  });
 });
 function FormatCurrency(objNum){
    var num = objNum.value
@@ -112,4 +135,14 @@ function TambahTitik(num){
      numArr[i]+='.';
    }
    return numArr.reverse().join('');
+}
+function tambah_list_bahan_pada_produk(element){
+  console.log(list_bahan_json);
+  $.each(list_bahan_json, function(key, value){
+    element.append("<option value='"+key+"'>"+value+"</option>");
+    console.log(value)
+  });
+  element.select2({
+    theme: "bootstrap"
+  });
 }
