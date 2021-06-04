@@ -3,14 +3,14 @@
   include 'config/url.php';
   include 'function/check-login.php';
 
-  if(strtoupper($_SESSION['level']) != 'A'){  
+  if(strtoupper($_SESSION['level']) != 'A'){
     /* Jika Orang Yang Login Bukan Admin */
     header("Location:".$base_url.'index.php');
   }
 
   $id_transaksi_beli = $_GET['id_transaksi'];
 
-  $list_bahan_query = 
+  $list_bahan_query =
     "SELECT tb_transaksi_beli_detail.*, tb_transaksi_beli.created_at ,supplier.nama AS nama_supplier, supplier.alamat AS alamat_supplier, tb_bahan.nama AS nama_bahan
     FROM tb_transaksi_beli_detail
     INNER JOIN tb_transaksi_beli
@@ -81,20 +81,20 @@
                           <td><?= $bahan['jumlah']; ?></td>
                           <td>Rp. <?= number_format($bahan['total_harga'], 0, '', '.'); ?></td>
                           </tr>
-                          
-                      <?php 
+
+                      <?php
                           $total_jumlah = $total_jumlah + $bahan['jumlah'];
                           $total_harga_semua = $total_harga_semua + $bahan['total_harga'];
-                          $no++; 
-                        } 
+                          $no++;
+                        }
                       ?>
                     </tbody>
                     <tfoot>
-                        <tr>
-                            <th colspan="6">Total:</th>
-                            <th><?= number_format($total_jumlah, 0, '', '.'); ?></th>
-                            <th>Rp. <?= number_format($total_harga_semua, 0, '', '.'); ?></th>
-                        </tr>
+                      <tr>
+                        <th colspan="6">Total:</th>
+                        <th><?= number_format($total_jumlah, 0, '', '.'); ?></th>
+                        <th>Rp. <?= number_format($total_harga_semua, 0, '', '.'); ?></th>
+                      </tr>
                     </tfoot>
                   </table>
                 </div>

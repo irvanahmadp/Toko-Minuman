@@ -1,0 +1,23 @@
+{
+  "name": "toko-minuman",
+  "version": "1.0.0",
+  "description": "",
+  "main": "-",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IrvanAhmadP/Toko-Minuman.git"
+  },
+  "author": "Irvan Ahmad P.",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/IrvanAhmadP/Toko-Minuman/issues"
+  },
+  "homepage": "https://github.com/IrvanAhmadP/Toko-Minuman#readme",
+  "dependencies": {
+    "@chenfengyuan/datepicker": "^1.0.10",
+    "@coreui/coreui": "^3.4.0"
+  }
+}
